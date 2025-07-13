@@ -17,27 +17,16 @@ add_action(
 		$fields = array(
 			esc_html__( 'Mail Settings', 'review-requester-for-woocommerce' ) => array(
 				array(
-					'id'    => 'rrw_from_name',
-					'label' => esc_html__( 'From Name', 'review-requester-for-woocommerce' ),
+					'id'    => 'rrw_sent_email_days',
+					'label' => esc_html__( 'When to sent an email (x)days', 'review-requester-for-woocommerce' ),
 					'type'  => 'text',
 				),
-				array(
-					'id'    => 'rrw_from_address',
-					'label' => esc_html__( 'From Address', 'review-requester-for-woocommerce' ),
-					'type'  => 'text',
-				),
-				array(
-					'id'      => 'rrw_email_subject',
-					'label'   => esc_html__( 'From Address', 'review-requester-for-woocommerce' ),
-					'type'    => 'text',
-					'default' => esc_html__( 'Back in Stock!', 'review-requester-for-woocommerce' ),
-				)
-			)
+			),
 		);
 
 		new Settings(
-			'email-logs',          // Parent menu slug.
-			'email-logs-settings', // menu slug.
+			'review-requests',          // Parent menu slug.
+			'review-requests-settings', // menu slug.
 			esc_html__( 'Settings', 'review-requester-for-woocommerce' ),
 			esc_html__( 'Settings', 'review-requester-for-woocommerce' ),
 			'manage_options',

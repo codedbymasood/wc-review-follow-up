@@ -46,6 +46,9 @@ class Admin {
 
 	public function order_completed( $order_id = 0 ) {
 		$order = wc_get_order( $order_id );
+
+		// Save details to table.
+		// Sent an email.
 	}
 
 	public function admin_menu() {
@@ -53,14 +56,14 @@ class Admin {
 			esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ),
 			esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ),
 			'manage_options',
-			'notify-list',
-			array( $this, 'render_notify_list_page' ),
+			'review-requests',
+			array( $this, 'render_review_request_page' ),
 			'dashicons-email',
 			26
 		);
 	}
 
-	public function render_notify_list_page() {
+	public function render_review_request_page() {
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ) . '</h1>';
 		$notify_table = new Review_Request_List_Table();
