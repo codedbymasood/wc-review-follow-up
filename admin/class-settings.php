@@ -90,8 +90,8 @@ class Settings {
 		$this->capability  = $capability;
 		$this->fields      = $fields;
 
-		// Make nonce unique per page
-		$this->nonce_name = $menu_slug . '_nonce';
+		// Make nonce unique per page.
+		$this->nonce_name   = $menu_slug . '_nonce';
 		$this->nonce_action = $menu_slug . '_action';
 
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 20 );
@@ -122,14 +122,13 @@ class Settings {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		// Only enqueue on our settings pages
 		if ( strpos( $hook, $this->menu_slug ) === false ) {
 			return;
 		}
 
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_style( 'settings-style', RRW_URL . '/assets/css/settings.css', array(), '1.0' );
+		wp_enqueue_style( 'settings-style', RRW_URL . '/admin/assets/css/settings.css', array(), '1.0' );
 
 		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
 		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
