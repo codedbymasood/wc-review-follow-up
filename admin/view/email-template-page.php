@@ -17,10 +17,14 @@ add_action(
 		$fields = array(
 			esc_html__( 'Email Template', 'review-requester-for-woocommerce' ) => array(
 				array(
-					'id'    => 'rrw_review_email_template',
-					'label' => esc_html__( 'Email Template', 'product-availability-notifier-for-woocommerce' ),
-					'type'  => 'rictext_editor',
-				)
+					'id'      => 'rrw_review_email_template',
+					'label'   => esc_html__( 'Email Template', 'product-availability-notifier-for-woocommerce' ),
+					'type'    => 'richtext_editor',
+					'default' => array(
+						'html' => '',
+						'css'  => '',
+					),
+				),
 			),
 		);
 

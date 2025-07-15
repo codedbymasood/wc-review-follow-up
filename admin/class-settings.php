@@ -59,6 +59,20 @@ class Settings {
 	private $fields;
 
 	/**
+	 * Nonce name.
+	 *
+	 * @var string
+	 */
+	private $nonce_name;
+
+	/**
+	 * Nonce action.
+	 *
+	 * @var string
+	 */
+	private $nonce_action;
+
+	/**
 	 * Plugin constructor.
 	 *
 	 * @param string $parent_slug Parent slug.
@@ -75,6 +89,10 @@ class Settings {
 		$this->menu_title  = $menu_title;
 		$this->capability  = $capability;
 		$this->fields      = $fields;
+
+		// Make nonce unique per page
+		$this->nonce_name = $menu_slug . '_nonce';
+		$this->nonce_action = $menu_slug . '_action';
 
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 20 );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
@@ -96,6 +114,7 @@ class Settings {
 			array( $this, 'render_settings_page' )
 		);
 	}
+
 	/**
 	 * Enqueue scripts.
 	 *
@@ -103,6 +122,11 @@ class Settings {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
+		// Only enqueue on our settings pages
+		if ( strpos( $hook, $this->menu_slug ) === false ) {
+			return;
+		}
+
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'settings-style', RRW_URL . '/assets/css/settings.css', array(), '1.0' );
@@ -118,7 +142,12 @@ class Settings {
 	 * @return void
 	 */
 	public function save_settings() {
-		if ( ! isset( $_POST['rrw_settings_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['rrw_settings_nonce'] ), 'rrw_settings_action' ) ) {
+		// Check if we're on the current page
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== $this->menu_slug ) {
+			return;
+		}
+
+		if ( ! isset( $_POST[ $this->nonce_name ] ) || ! wp_verify_nonce( wp_unslash( $_POST[ $this->nonce_name ] ), $this->nonce_action ) ) {
 			return;
 		}
 
@@ -130,7 +159,9 @@ class Settings {
 			foreach ( $tab_fields as $field ) {
 				$id    = $field['id'];
 				$type  = isset( $field['type'] ) ? $field['type'] : 'text';
-				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : $field['default'];
+				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : ( isset( $field['default'] ) ? $field['default'] : '' );
+
+				error_log( 'Saving field: ' . $id . ' with value: ' . $value );
 
 				switch ( $type ) {
 					case 'checkbox':
@@ -142,6 +173,9 @@ class Settings {
 						break;
 					case 'textarea':
 						update_option( $id, sanitize_textarea_field( $value ) );
+						break;
+					case 'richtext_editor':
+						update_option( $id, $value );
 						break;
 					default:
 						update_option( $id, sanitize_text_field( $value ) );
@@ -164,7 +198,7 @@ class Settings {
 	public function render_settings_page() {
 		$tabs = array_keys( $this->fields );
 
-		$admin_url = admin_url( 'admin.php?page=notify-list-settings' );
+		$admin_url = admin_url( 'admin.php?page=' . $this->menu_slug );
 
 		$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : Utils::convert_case( $tabs[0] );
 		?>
@@ -184,7 +218,7 @@ class Settings {
 				<?php endforeach; ?>
 			</h2>
 			<form method="post">
-				<?php wp_nonce_field( 'rrw_settings_action', 'rrw_settings_nonce' ); ?>
+				<?php wp_nonce_field( $this->nonce_action, $this->nonce_name ); ?>
 				<?php
 				foreach ( $tabs as $i => $tab ) :
 					$tab_key = Utils::convert_case( $tab );
@@ -195,7 +229,7 @@ class Settings {
 						<?php endforeach; ?>
 					</div>
 				<?php endforeach; ?>
-				<?php submit_button(); ?>
+				<?php submit_button( 'Save Settings' ); ?>
 			</form>
 		</div>
 		<?php
@@ -218,6 +252,11 @@ class Settings {
 
 		$type  = isset( $field['type'] ) ? $field['type'] : 'text';
 		$label = isset( $field['label'] ) ? $field['label'] : '';
+
+		if ( 'richtext_editor' === $type ) {
+			$html_value = isset( $value['html'] ) ? $value['html'] : '';
+			$css_value  = isset( $value['css'] ) ? $value['css'] : '';
+		}
 		?>
 		<div class="field-wrap field-<?php echo esc_attr( $type ); ?>">
 			<?php if ( $label ) : ?>
@@ -260,14 +299,15 @@ class Settings {
 					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="color-picker">';
 					break;
 
-				case 'rictext_editor':
+				case 'richtext_editor':
 					echo '<div class="richtext-editor">';
 					echo '<ul class="rrw-tab-nav">';
 						echo '<li data-type="html" class="active">' . esc_html__( 'HTML', 'review-requester-for-woocommerce' ) . '</li>';
 						echo '<li data-type="css">' . esc_html__( 'CSS', 'review-requester-for-woocommerce' ) . '</li>';
 					echo '</ul>';
-					echo '<textarea class="html"></textarea>';
-					echo '<textarea class="css"></textarea>';
+
+					echo '<textarea class="html" name="' . esc_attr( $name ) . '[html]">' . esc_textarea( $html_value ) . '</textarea>';
+					echo '<textarea class="css" name="' . esc_attr( $name ) . '[css]" style="display:none;">' . esc_textarea( $css_value ) . '</textarea>';
 					echo '</div>';
 					break;
 

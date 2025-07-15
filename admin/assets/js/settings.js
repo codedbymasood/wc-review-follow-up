@@ -102,7 +102,14 @@
         html: htmlEditor,
         css: null
       });
+
+      // Sync codemirror with textarea.
+      htmlEditor.codemirror.on('change', function() {
+        htmlEditor.codemirror.save();
+      });
     }
 
   });
+
+
 })(jQuery);

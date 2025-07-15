@@ -20,16 +20,19 @@ add_action(
 					'id'    => 'rrw_from_name',
 					'label' => esc_html__( 'From Name', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
+					'default' => '',
 				),
 				array(
 					'id'    => 'rrw_from_address',
 					'label' => esc_html__( 'From Address', 'product-availability-notifier-for-woocommerce' ),
 					'type'  => 'text',
+					'default' => '',
 				),
 				array(
 					'id'    => 'rrw_sent_email_days',
 					'label' => esc_html__( 'When to sent an email (x)days', 'review-requester-for-woocommerce' ),
 					'type'  => 'text',
+					'default' => '',
 				),
 			),
 		);
