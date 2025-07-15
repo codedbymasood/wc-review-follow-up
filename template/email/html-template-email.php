@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 		<style>
 			.main-title {
 				color: red;
-				text-align: center;
+				text-align: left;
 			}
 		</style>
 	</head>

@@ -106,6 +106,10 @@ class Settings {
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_enqueue_style( 'settings-style', RRW_URL . '/assets/css/settings.css', array(), '1.0' );
+
+		wp_enqueue_code_editor( array( 'type' => 'text/html' ) );
+		wp_enqueue_code_editor( array( 'type' => 'text/css' ) );
+		wp_enqueue_script( 'rrw-settings', RRW_URL . '/admin/assets/js/settings.js', array( 'jquery', 'code-editor' ), '1.0', true );
 	}
 
 	/**
@@ -254,6 +258,17 @@ class Settings {
 
 				case 'color':
 					echo '<input type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $name ) . '" value="' . esc_attr( $value ) . '" class="color-picker">';
+					break;
+
+				case 'rictext_editor':
+					echo '<div class="richtext-editor">';
+					echo '<ul class="rrw-tab-nav">';
+						echo '<li data-type="html" class="active">' . esc_html__( 'HTML', 'review-requester-for-woocommerce' ) . '</li>';
+						echo '<li data-type="css">' . esc_html__( 'CSS', 'review-requester-for-woocommerce' ) . '</li>';
+					echo '</ul>';
+					echo '<textarea class="html"></textarea>';
+					echo '<textarea class="css"></textarea>';
+					echo '</div>';
 					break;
 
 				case 'text':

@@ -39,6 +39,27 @@ class Cron {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
+		add_action( 'rrw_send_review_email', array( $this, 'send_review_email' ) );
+	}
+
+	public function send_review_email( $email, $order ) {
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		$subject = esc_html__( 'Back in Stock!', 'review-requester-for-woocommerce' );
+
+		ob_start();
+		include RRW_PATH . '/template/email/html-template-email.php';
+		$content = ob_get_contents();
+		ob_end_clean();
+
+		// CssInliner loads from WooCommerce.
+		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
+
+		$result = wp_mail( $email, $subject, $html, $headers ); // we can use `wc_mail` instead.
+		if ( ! $result ) {
+			esc_html_e( 'Mail failed to sent.', 'review-requester-for-woocommerce' );
+		} else {
+			esc_html_e( 'Mail sent successfully.', 'review-requester-for-woocommerce' );
+		}
 	}
 
 }

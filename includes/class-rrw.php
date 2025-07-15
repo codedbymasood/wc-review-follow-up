@@ -76,6 +76,7 @@ final class RRW {
 		if ( is_admin() ) {
 			require_once RRW_PATH . '/admin/class-settings.php';
 			include_once RRW_PATH . '/admin/view/settings-page.php';
+			include_once RRW_PATH . '/admin/view/email-template-page.php';
 			require_once RRW_PATH . '/admin/class-admin.php';
 			require_once RRW_PATH . '/admin/class-review-request-list-table.php';
 		}

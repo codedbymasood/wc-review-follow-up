@@ -41,12 +41,22 @@ class Admin {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
 	}
+	/**
+	 * Enqueue scripts.
+	 *
+	 * @param string $hook Menu hook.
+	 * @return void
+	 */
+	public function enqueue_scripts( $hook ) {
+		wp_enqueue_style( 'rrw-admin', RRW_URL . '/admin/assets/css/admin.css', array(), '1.0' );
+	}
 
 	public function order_completed( $order_id = 0 ) {
-		// $order = wc_get_order( $order_id );
+		$order = wc_get_order( $order_id );
 
 		// foreach ( $order->get_items() as $item_id => $item ) {
 		// 	$product        = $item->get_product();      // WC_Product object
@@ -64,25 +74,23 @@ class Admin {
 		// Save details to table.
 		// Sent an email.
 
-		$email = 'example@example.com';
+		$email = $order->get_billing_email();
 
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' );
+		$this->set_cron_job( $email, $order );
 
-		ob_start();
-		include RRW_PATH . '/template/email/html-template-email.php';
-		$content = ob_get_contents();
-		ob_end_clean();
+		$this->send_review_email( $email, $order );
 
-		// CssInliner loads from WooCommerce.
-		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
+		
+	}
 
-		$result = woocommerce_mail( $email, $subject, $content, $headers );
-		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'product-availability-notifier-for-woocommerce' );
-		} else {
-			esc_html_e( 'Mail sent successfully.', 'product-availability-notifier-for-woocommerce' );
-		}
+	public function set_cron_job( $email, $order ) {
+		$schedule = time() + ( 3 * DAY_IN_SECONDS ); // 3 days later.
+
+		wp_schedule_single_event(
+			$schedule,
+			'rrw_send_review_email',
+			array( $email, $order )
+		);
 	}
 
 	public function admin_menu() {
