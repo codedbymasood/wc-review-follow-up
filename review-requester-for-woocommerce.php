@@ -39,5 +39,17 @@ function rrw() {
 	return \RRW\RRW::instance();
 }
 
-// Global for backwards compatibility.
-$GLOBALS['rrw'] = rrw();
+add_action( 
+	'woocommerce_loaded',
+	function () {
+		// Require at least WooCommerce 6.0+.
+		if ( version_compare( wc()->version, '6.0', '<' ) ) {
+			return;
+		}
+
+		// Global for backwards compatibility.
+		$GLOBALS['rrw'] = rrw();
+	}
+);
+
+

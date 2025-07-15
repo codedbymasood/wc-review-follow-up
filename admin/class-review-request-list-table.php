@@ -38,7 +38,6 @@ class Review_Request_List_Table extends \WP_List_Table {
 			'cb'         => '<input type="checkbox" />',
 			'id'         => esc_html__( 'ID', 'review-requester-for-woocommerce' ),
 			'email'      => esc_html__( 'Email', 'review-requester-for-woocommerce' ),
-			'product_id' => esc_html__( 'Product ID', 'review-requester-for-woocommerce' ),
 			'status'     => esc_html__( 'Status', 'review-requester-for-woocommerce' ),
 			'created_at' => esc_html__( 'Created At', 'review-requester-for-woocommerce' ),
 		);
@@ -67,10 +66,6 @@ class Review_Request_List_Table extends \WP_List_Table {
 
 	public function column_status( $item ) {
 		return $item['status'] ? $item['status'] : '-';
-	}
-
-	public function column_product_id( $item ) {
-		return $item['product_id'] ? $item['product_id'] : '';
 	}
 
 	public function column_created_at( $item ) {

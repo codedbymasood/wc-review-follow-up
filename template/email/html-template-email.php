@@ -8,3 +8,21 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+?>
+
+<html>
+	<head>
+		<title><?php esc_html_e( 'Back in Stock!', 'product-availability-notifier-for-woocommerce' ); ?></title>
+		<style>
+			.main-title {
+				color: red;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<h2 class="main-title"><?php esc_html_e( 'Good news!', 'product-availability-notifier-for-woocommerce' ); ?></h2>
+		</div>
+	</body>
+</html>
