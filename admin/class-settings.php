@@ -247,8 +247,9 @@ class Settings {
 			$value = $field['default'];
 		}
 
-		$type  = isset( $field['type'] ) ? $field['type'] : 'text';
-		$label = isset( $field['label'] ) ? $field['label'] : '';
+		$type        = isset( $field['type'] ) ? $field['type'] : 'text';
+		$label       = isset( $field['label'] ) ? $field['label'] : '';
+		$description = isset( $field['description'] ) ? $field['description'] : '';
 
 		if ( 'richtext_editor' === $type ) {
 			$default_editor = isset( $field['default_editor'] ) ? $field['default_editor'] : 'html';
@@ -309,6 +310,10 @@ class Settings {
 
 					echo '<textarea class="html" name="' . esc_attr( $name ) . '[html]">' . esc_textarea( $html_value ) . '</textarea>';
 					echo '<textarea class="css" name="' . esc_attr( $name ) . '[css]" style="display:none;">' . esc_textarea( $css_value ) . '</textarea>';
+
+					if ( $description ) {
+						echo '<p>* ' . esc_html( $description ) . '</p>';
+					}
 					echo '</div>';
 					break;
 
