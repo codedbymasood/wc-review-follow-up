@@ -91,21 +91,23 @@
     const htmlTextarea = $(element).find('.html')[0];
     const cssTextarea = $(element).find('.css')[0];
 
+    const defaultEditor = $(element).data('default-editor');
+
     if (htmlTextarea || cssTextarea) {
-      $(element).find('textarea.css').hide();
-      $(element).find('textarea.html').show();
+      $(element).find('textarea').hide();
+      $(element).find(`textarea.${defaultEditor}`).show();
 
       // Initialize HTML editor by default
-      const htmlEditor = initializeEditor(element, 'html', index);
+      const editor = initializeEditor(element, defaultEditor, index);
 
       editorInstances.set(instanceKey, {
-        html: htmlEditor,
-        css: null
+        html: ( 'html' === defaultEditor ) ? editor : null,
+        css: ( 'css' === defaultEditor ) ? editor : null,
       });
 
       // Sync codemirror with textarea.
-      htmlEditor.codemirror.on('change', function() {
-        htmlEditor.codemirror.save();
+      editor.codemirror.on('change', function() {
+        editor.codemirror.save();
       });
     }
 

@@ -141,7 +141,7 @@ class Settings {
 	 * @return void
 	 */
 	public function save_settings() {
-		// Check if we're on the current page
+		// Check if we're on the current page.
 		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== $this->menu_slug ) {
 			return;
 		}
@@ -159,8 +159,6 @@ class Settings {
 				$id    = $field['id'];
 				$type  = isset( $field['type'] ) ? $field['type'] : 'text';
 				$value = isset( $_POST[ $id ] ) ? wp_unslash( $_POST[ $id ] ) : ( isset( $field['default'] ) ? $field['default'] : '' );
-
-				error_log( 'Saving field: ' . $id . ' with value: ' . $value );
 
 				switch ( $type ) {
 					case 'checkbox':
@@ -253,8 +251,9 @@ class Settings {
 		$label = isset( $field['label'] ) ? $field['label'] : '';
 
 		if ( 'richtext_editor' === $type ) {
-			$html_value = isset( $value['html'] ) ? $value['html'] : '';
-			$css_value  = isset( $value['css'] ) ? $value['css'] : '';
+			$default_editor = isset( $field['default_editor'] ) ? $field['default_editor'] : 'html';
+			$html_value     = isset( $value['html'] ) ? $value['html'] : '';
+			$css_value      = isset( $value['css'] ) ? $value['css'] : '';
 		}
 		?>
 		<div class="field-wrap field-<?php echo esc_attr( $type ); ?>">
@@ -299,11 +298,14 @@ class Settings {
 					break;
 
 				case 'richtext_editor':
-					echo '<div class="richtext-editor">';
-					echo '<ul class="rrw-tab-nav">';
-						echo '<li data-type="html" class="active">' . esc_html__( 'HTML', 'review-requester-for-woocommerce' ) . '</li>';
-						echo '<li data-type="css">' . esc_html__( 'CSS', 'review-requester-for-woocommerce' ) . '</li>';
-					echo '</ul>';
+					echo '<div class="richtext-editor" data-default-editor="' . esc_attr( $default_editor ) . '">';
+
+					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
+						echo '<ul class="rrw-tab-nav">';
+							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'review-requester-for-woocommerce' ) . '</li>';
+							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'review-requester-for-woocommerce' ) . '</li>';
+						echo '</ul>';
+					}
 
 					echo '<textarea class="html" name="' . esc_attr( $name ) . '[html]">' . esc_textarea( $html_value ) . '</textarea>';
 					echo '<textarea class="css" name="' . esc_attr( $name ) . '[css]" style="display:none;">' . esc_textarea( $css_value ) . '</textarea>';

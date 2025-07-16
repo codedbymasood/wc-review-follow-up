@@ -15,12 +15,13 @@ add_action(
 	'init',
 	function() {
 		$fields = array(
-			esc_html__( 'Email Template', 'review-requester-for-woocommerce' ) => array(
+			esc_html__( 'Review Email Template', 'review-requester-for-woocommerce' ) => array(
 				array(
-					'id'      => 'rrw_review_email_template',
-					'label'   => esc_html__( 'Email Template', 'product-availability-notifier-for-woocommerce' ),
-					'type'    => 'richtext_editor',
-					'default' => array(
+					'id'             => 'rrw_review_email_template',
+					'type'           => 'richtext_editor',
+					'options'        => array( 'html', 'css' ),
+					'default_editor' => 'css',
+					'default'        => array(
 						'html' => '',
 						'css'  => '',
 					),
