@@ -40,6 +40,7 @@ class Review_Request_List_Table extends \WP_List_Table {
 			'email'      => esc_html__( 'Email', 'review-requester-for-woocommerce' ),
 			'status'     => esc_html__( 'Status', 'review-requester-for-woocommerce' ),
 			'created_at' => esc_html__( 'Created At', 'review-requester-for-woocommerce' ),
+			'sent_at'    => esc_html__( 'Sent At', 'review-requester-for-woocommerce' ),
 		);
 	}
 
@@ -70,6 +71,10 @@ class Review_Request_List_Table extends \WP_List_Table {
 
 	public function column_created_at( $item ) {
 		return $item['created_at'];
+	}
+
+	public function column_sent_at( $item ) {
+		return $item['sent_at'];
 	}
 
 	/**
