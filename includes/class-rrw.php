@@ -86,13 +86,26 @@ final class RRW {
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
+		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
 
 		// Create a table when activate the plugin.
 		register_activation_hook( RRW_PLUGIN_FILE, array( $this, 'create_email_logs_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
+	public function ensure_table_exists() {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'rrw_review_requests';
+
+		// Check if table exists.
+		if( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
+			$this->create_email_logs_table();
+		}
+	}
+
 	public function create_email_logs_table() {
+
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'rrw_review_requests';
@@ -103,12 +116,10 @@ final class RRW {
 			id           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 			order_id     BIGINT UNSIGNED NOT NULL,
 			customer_id  BIGINT UNSIGNED NOT NULL,
-			product_ids  LONGTEXT        NOT NULL,        /* JSON list of product IDs */
-			email_type   VARCHAR(50)     NOT NULL DEFAULT 'review_request',
+			email        VARCHAR(50)     NOT NULL, 
 			status       VARCHAR(50)     NOT NULL DEFAULT 'pending',  /* queued | sent | failed */
-			token        VARCHAR(255)    NOT NULL,        /* unique token per email, if you need it */
 			error_msg    TEXT            NULL,
-			sent_at      DATETIME        NULL,            /* set when email actually sent */
+			sent_at      DATETIME        NULL,
 			created_at   DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
 			KEY order_id (order_id),

@@ -57,29 +57,52 @@ class Admin {
 
 	public function order_completed( $order_id = 0 ) {
 		$order = wc_get_order( $order_id );
-
-		// foreach ( $order->get_items() as $item_id => $item ) {
-		// 	$product        = $item->get_product();      // WC_Product object
-		// 	$product_id     = $item->get_product_id();   // ID without variations
-		// 	$variation_id   = $item->get_variation_id(); // Variation ID, 0 if none
-		// 	$name           = $item->get_name();         // Product title
-		// 	$qty            = $item->get_quantity();     // Quantity purchased
-		// 	$line_subtotal  = $item->get_subtotal();     // Price × qty, before tax/discount
-		// 	$line_total     = $item->get_total();        // Price × qty, after tax/discount
-
-			// Do whatever you need here…
-			// e.g. echo "$name × $qty – ₹$line_total<br>";
-		// }
-
 		// Save details to table.
 		// Sent an email.
 
 		$email = $order->get_billing_email();
 
+		$this->save_data_in_table( $email, $order );
+
 		// $this->set_cron_job( $email, $order );
 
 		// TODO: Move the email to cronjobs, it only here for testing purposes.
-		$this->send_review_email( $email, $order );
+		// $this->send_review_email( $email, $order );
+	}
+
+	public function save_data_in_table( $email, $order ) {
+
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . 'rrw_review_requests';
+
+		if ( ! empty( $email ) && null !== $order ) {
+			$order_id = $order->get_ID();
+
+			$exists = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*) FROM $table_name WHERE email = %s AND order_id = %d",
+					$email,
+					$order_id
+				)
+			);
+
+			if ( ! $exists ) {
+				$wpdb->insert(
+					$wpdb->prefix . 'rrw_review_requests',
+					array(
+						'email'    => $email,
+						'order_id' => $order_id,
+						'status'   => 'queued',
+					),
+					array( '%s', '%d', '%s' )
+				);
+			} else {
+				die( esc_html__( 'Scheduled already.', 'product-availability-notifier-for-woocommerce' ) );
+			}
+		} else {
+			die( esc_html__( 'Order doesn\'t contain an email address.', 'product-availability-notifier-for-woocommerce' ) );
+		}
 	}
 
 	public function send_review_email( $email, $order ) {
