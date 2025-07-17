@@ -63,8 +63,7 @@ class Admin {
 		$email = $order->get_billing_email();
 
 		$this->save_data_in_table( $email, $order );
-
-		// $this->set_cron_job( $email, $order );
+		$this->set_cron_job( $email, $order );
 
 		// TODO: Move the email to cronjobs, it only here for testing purposes.
 		// $this->send_review_email( $email, $order );
@@ -126,7 +125,9 @@ class Admin {
 	}
 
 	public function set_cron_job( $email, $order ) {
-		$schedule = time() + ( 3 * DAY_IN_SECONDS ); // 3 days later.
+		// $schedule = time() + ( 3 * DAY_IN_SECONDS ); // 3 days later.
+
+		$schedule = time() + 60; // 2 days later
 
 		wp_schedule_single_event(
 			$schedule,

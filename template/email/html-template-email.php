@@ -28,7 +28,7 @@ The [store_name] Team";
 $email_title    = get_option( 'rrw_review_email_title', '' );
 $email_template = get_option( 'rrw_review_email_template', '' );
 
-$html = isset( $email_template['html'] ) ? $email_template['html'] : $default_html;
+$html = isset( $email_template['html'] ) && ! empty( $email_template['html'] ) ? $email_template['html'] : $default_html;
 $css  = isset( $email_template['css'] ) ? $email_template['css'] : '';
 
 // TODO: [customer_name], [items], [store_name] needs to replace the related values.

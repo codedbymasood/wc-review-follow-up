@@ -9,6 +9,8 @@
 
 namespace RRW;
 
+use Pelago\Emogrifier\CssInliner;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -39,12 +41,12 @@ class Cron {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		add_action( 'rrw_send_review_email', array( $this, 'send_review_email' ) );
+		add_action( 'rrw_send_review_email', array( $this, 'send_review_email' ), 10, 2 );
 	}
 
 	public function send_review_email( $email, $order ) {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Back in Stock!', 'review-requester-for-woocommerce' );
+		$subject = get_option( 'rrw_review_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'review-requester-for-woocommerce' ) );
 
 		ob_start();
 		include RRW_PATH . '/template/email/html-template-email.php';

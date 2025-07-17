@@ -36,7 +36,7 @@ The [store_name] Team";
 					'id'      => 'rrw_review_email_subject',
 					'label'   => esc_html__( 'Subject', 'product-availability-notifier-for-woocommerce' ),
 					'type'    => 'text',
-					'default' => '',
+					'default' => esc_html__( 'How was your order? We\'d love your feedback.', 'review-requester-for-woocommerce' ),
 				),
 				array(
 					'id'      => 'rrw_review_email_title',
@@ -45,7 +45,7 @@ The [store_name] Team";
 					'default' => '',
 				),
 				array(
-					'id'             => 'rrw_review_email_template3',
+					'id'             => 'rrw_review_email_template',
 					'type'           => 'richtext_editor',
 					'options'        => array( 'html', 'css' ),
 					'default_editor' => 'html',
