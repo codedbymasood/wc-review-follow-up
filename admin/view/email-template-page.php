@@ -14,21 +14,27 @@ defined( 'ABSPATH' ) || exit;
 add_action(
 	'init',
 	function() {
-		$default_html = "Hi [customer_name],
 
-Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases.
+		// $order = wc_get_order(116);
 
-We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.
+		// var_dump( $order->get_billing_first_name(), $order->get_billing_last_name() );
 
-Here's what you ordered:
+		$default_html = "<p>Hi [customer_name],</p>
+
+<p>Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases.</p>
+
+<p>We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.</p>
+
+<strong>Here's what you ordered:</strong>
 
 [items]
 
-It only takes a minute, and it means a lot to our small team.
-Thanks again for choosing us!
+<p>It only takes a minute, and it means a lot to our small team.</p>
 
-Warmly,
-The [store_name] Team";
+<p>Thanks again for choosing us!</p>
+
+<p>Warmly,</p>
+<p>The [site_name] Team</p>";
 
 		$fields = array(
 			esc_html__( 'Review Email Template', 'review-requester-for-woocommerce' ) => array(
@@ -53,7 +59,7 @@ The [store_name] Team";
 						'html' => $default_html,
 						'css'  => '',
 					),
-					'description'    => 'You can use [items], [customer_name], [store_name] in the editor.',
+					'description'    => 'You can use [items], [customer_name], [site_name] in the editor.',
 				),
 			),
 		);

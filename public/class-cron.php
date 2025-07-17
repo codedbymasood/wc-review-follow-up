@@ -62,6 +62,8 @@ class Cron {
 		} else {
 			esc_html_e( 'Mail sent successfully.', 'review-requester-for-woocommerce' );
 		}
+
+		// TODO: Change status to `sent` or `failed`.
 	}
 
 }

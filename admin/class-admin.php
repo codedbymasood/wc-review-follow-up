@@ -149,9 +149,6 @@ class Admin {
 	}
 
 	public function render_review_request_page() {
-		$order = wc_get_order( 90 );
-
-		// var_dump($order->get_items());
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ) . '</h1>';
 		$notify_table = new Review_Request_List_Table();

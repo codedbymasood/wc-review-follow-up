@@ -7,23 +7,26 @@
  * @version 1.0
  */
 
+namespace RRW;
+
 defined( 'ABSPATH' ) || exit;
 
-$default_html = "Hi [customer_name],
+$default_html = "<p>Hi [customer_name],</p>
 
-Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases.
+<p>Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases.</p>
 
-We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.
+<p>We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.</p>
 
-Here's what you ordered:
+<strong>Here's what you ordered:</strong>
 
 [items]
 
-It only takes a minute, and it means a lot to our small team.
-Thanks again for choosing us!
+<p>It only takes a minute, and it means a lot to our small team.</p>
 
-Warmly,
-The [store_name] Team";
+<p>Thanks again for choosing us!</p>
+
+<p>Warmly,</p>
+<p>The [site_name] Team</p>";
 
 $email_title    = get_option( 'rrw_review_email_title', '' );
 $email_template = get_option( 'rrw_review_email_template', '' );
@@ -31,7 +34,7 @@ $email_template = get_option( 'rrw_review_email_template', '' );
 $html = isset( $email_template['html'] ) && ! empty( $email_template['html'] ) ? $email_template['html'] : $default_html;
 $css  = isset( $email_template['css'] ) ? $email_template['css'] : '';
 
-// TODO: [customer_name], [items], [store_name] needs to replace the related values.
+// TODO: [customer_name], [items], [site_name] needs to replace the related values.
 ?>
 
 <html>
@@ -43,9 +46,7 @@ $css  = isset( $email_template['css'] ) ? $email_template['css'] : '';
 	</head>
 	<body>
 		<div>
-			<?php
-				echo wp_kses_post( $html );
-			?>
+			<?php echo wp_kses_post( Utils::parse_review_email( $html, $order ) ); ?>
 		</div>
 	</body>
 </html>

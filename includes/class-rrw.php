@@ -118,7 +118,6 @@ final class RRW {
 			customer_id  BIGINT UNSIGNED NOT NULL,
 			email        VARCHAR(50)     NOT NULL, 
 			status       VARCHAR(50)     NOT NULL DEFAULT 'pending',  /* queued | sent | failed */
-			error_msg    TEXT            NULL,
 			sent_at      DATETIME        NULL,
 			created_at   DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),

@@ -61,4 +61,22 @@ class Utils {
 		}
 		return $random_string;
 	}
+
+	public static function parse_review_email( $html, $order ) {
+		$order_html = '';
+
+		foreach ( $order->get_items() as $item_id => $item ) {
+			$product = $item->get_product();
+
+			$order_html .= '<h3>' . esc_html( $product->get_name() ) . '</h3>';
+			$order_html .= '<a href="' . esc_url( get_permalink( $product->get_ID() ) ) . '">' . esc_html__( 'Leave a Review', 'review-requester-for-woocommerce' ) . '</a>';
+		}
+
+		/* Translators: %1$s: First name, %2$s: Last name */
+		$name = sprintf( '%1$s %2$s', esc_html( $order->get_billing_first_name() ), esc_html( $order->get_billing_last_name() ) );
+
+		$site_name = get_bloginfo( 'name' );
+
+		return str_replace( array( '[customer_name]', '[items]', '[site_name]' ), array( $name, $order_html, $site_name ), $html );
+	}
 }
