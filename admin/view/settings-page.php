@@ -57,7 +57,7 @@ add_action(
 					'id'      => 'rrw_review_email_title',
 					'label'   => esc_html__( 'Title', 'review-requester-for-woocommerce' ),
 					'type'    => 'text',
-					'default' => '',
+					'default' => esc_html__( 'Quick favor? We\'d love your feedback!', 'review-requester-for-woocommerce' ),
 				),
 				array(
 					'id'      => 'rrw_sent_email_days',

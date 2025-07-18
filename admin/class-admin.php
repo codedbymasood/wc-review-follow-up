@@ -57,16 +57,16 @@ class Admin {
 
 	public function order_completed( $order_id = 0 ) {
 		$order = wc_get_order( $order_id );
-		// Save details to table.
-		// Sent an email.
 
-		$email = $order->get_billing_email();
+		$order_total = (float) $order->get_total();
+		$email       = $order->get_billing_email();
 
-		$this->save_data_in_table( $email, $order );
-		$this->set_cron_job( $email, $order );
+		$exceed_order_amount = (int) get_option( 'rrw_exceed_order_amount', '' );
 
-		// TODO: Move the email to cronjobs, it only here for testing purposes.
-		// $this->send_review_email( $email, $order );
+		if ( empty( $exceed_order_amount ) || $order_total >= $exceed_order_amount ) {
+			$this->save_data_in_table( $email, $order );
+			$this->set_cron_job( $email, $order );
+		}
 	}
 
 	public function save_data_in_table( $email, $order ) {
@@ -104,30 +104,12 @@ class Admin {
 		}
 	}
 
-	public function send_review_email( $email, $order ) {
-		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = esc_html__( 'Back in Stock!', 'review-requester-for-woocommerce' );
-
-		ob_start();
-		include RRW_PATH . '/template/email/html-template-email.php';
-		$content = ob_get_contents();
-		ob_end_clean();
-
-		// CssInliner loads from WooCommerce.
-		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
-
-		$result = wp_mail( $email, $subject, $html, $headers ); // we can use `wc_mail` instead.
-		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'review-requester-for-woocommerce' );
-		} else {
-			esc_html_e( 'Mail sent successfully.', 'review-requester-for-woocommerce' );
-		}
-	}
-
 	public function set_cron_job( $email, $order ) {
-		// $schedule = time() + ( 3 * DAY_IN_SECONDS ); // 3 days later.
+		$schedule_days = get_option( 'rrw_sent_email_days', 3 );
 
-		$schedule = time() + 60; // 2 days later
+		$schedule = time() + ( $schedule_days * DAY_IN_SECONDS ); // 3 days later
+
+		// $schedule = time() + 60; // 2 minutes later
 
 		wp_schedule_single_event(
 			$schedule,
