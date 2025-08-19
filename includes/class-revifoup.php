@@ -68,14 +68,12 @@ final class REVIFOUP {
 	 * Load required files.
 	 */
 	private function load_dependencies() {
-		require_once REVIFOUP_PATH . '/includes/class-utils.php';
 		require_once REVIFOUP_PATH . '/core/init-core.php';
 
 		require_once REVIFOUP_PATH . '/public/class-cron.php';
 		require_once REVIFOUP_PATH . '/public/class-frontend.php';
 
 		if ( is_admin() ) {
-			require_once REVIFOUP_PATH . '/admin/class-settings.php';
 			include_once REVIFOUP_PATH . '/admin/view/settings-page.php';
 			require_once REVIFOUP_PATH . '/admin/class-admin.php';
 			require_once REVIFOUP_PATH . '/admin/class-review-request-list-table.php';

@@ -41,7 +41,6 @@ class Admin {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
 		add_filter( 'stobokit_product_lists', array( $this, 'add_product' ) );
@@ -52,15 +51,6 @@ class Admin {
 		$products['review-follow-up']['id']   = 105;
 
 		return $products;
-	}
-	/**
-	 * Enqueue scripts.
-	 *
-	 * @param string $hook Menu hook.
-	 * @return void
-	 */
-	public function enqueue_scripts( $hook ) {
-		wp_enqueue_style( 'revifoup-admin', REVIFOUP_URL . '/admin/assets/css/admin.css', array(), '1.0' );
 	}
 
 	public function order_completed( $order_id = 0 ) {

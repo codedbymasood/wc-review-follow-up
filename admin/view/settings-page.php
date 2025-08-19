@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace REVIFOUP;
+namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 
