@@ -2,12 +2,12 @@
 /**
  * Table holds all the notify details.
  *
- * @package review-requester-for-woocommerce\admin\
+ * @package review-follow-up-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
 
-namespace RRW;
+namespace REVIFOUP;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,11 +36,11 @@ class Review_Request_List_Table extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'id'         => esc_html__( 'Order ID', 'review-requester-for-woocommerce' ),
-			'email'      => esc_html__( 'Email', 'review-requester-for-woocommerce' ),
-			'status'     => esc_html__( 'Status', 'review-requester-for-woocommerce' ),
-			'created_at' => esc_html__( 'Created At', 'review-requester-for-woocommerce' ),
-			'sent_at'    => esc_html__( 'Sent At', 'review-requester-for-woocommerce' ),
+			'id'         => esc_html__( 'Order ID', 'review-follow-up-for-woocommerce' ),
+			'email'      => esc_html__( 'Email', 'review-follow-up-for-woocommerce' ),
+			'status'     => esc_html__( 'Status', 'review-follow-up-for-woocommerce' ),
+			'created_at' => esc_html__( 'Created At', 'review-follow-up-for-woocommerce' ),
+			'sent_at'    => esc_html__( 'Sent At', 'review-follow-up-for-woocommerce' ),
 		);
 	}
 
@@ -84,7 +84,7 @@ class Review_Request_List_Table extends \WP_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		return array(
-			'delete' => esc_html__( 'Delete permanently', 'review-requester-for-woocommerce' ),
+			'delete' => esc_html__( 'Delete permanently', 'review-follow-up-for-woocommerce' ),
 		);
 	}
 
@@ -92,7 +92,7 @@ class Review_Request_List_Table extends \WP_List_Table {
 		if ( 'delete' === $this->current_action() && ! empty( $_REQUEST['notification'] ) ) {
 			global $wpdb;
 
-			$table_name = $wpdb->prefix . 'rrw_review_requests';
+			$table_name = $wpdb->prefix . 'revifoup_review_requests';
 			$ids        = array_map( 'absint', $_REQUEST['notification'] );
 
 			if ( ! empty( $ids ) ) {
@@ -108,7 +108,7 @@ class Review_Request_List_Table extends \WP_List_Table {
 		$this->process_bulk_actions();
 		global $wpdb;
 
-		$table_name   = $wpdb->prefix . 'rrw_review_requests';
+		$table_name   = $wpdb->prefix . 'revifoup_review_requests';
 		$per_page     = 10;
 		$current_page = $this->get_pagenum();
 

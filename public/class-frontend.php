@@ -2,12 +2,12 @@
 /**
  * Frontend class.
  *
- * @package review-requester-for-woocommerce\public\
+ * @package review-follow-up-for-woocommerce\public\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
 
-namespace RRW;
+namespace REVIFOUP;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,14 +19,14 @@ class Frontend {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var RRW|null
+	 * @var REVIFOUP|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return RRW
+	 * @return REVIFOUP
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -46,22 +46,22 @@ class Frontend {
 	}
 
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'rrw-main', RRW_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
+		wp_enqueue_script( 'revifoup-main', REVIFOUP_URL . '/public/assets/js/main.js', array( 'jquery' ), '1.0', true );
 	}
 
 	public function mail_from() {
-		$from_address = get_option( 'rrw_from_address', '' );
+		$from_address = get_option( 'revifoup_from_address', '' );
 		return $from_address;
 	}
 
 	public function mail_from_name() {
-		$from_name = get_option( 'rrw_from_name', '' );
+		$from_name = get_option( 'revifoup_from_name', '' );
 		return $from_name;
 	}
 
 }
 
-\RRW\Frontend::instance();
+\REVIFOUP\Frontend::instance();
 
 
 

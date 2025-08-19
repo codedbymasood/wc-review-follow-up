@@ -2,12 +2,12 @@
 /**
  * Email template.
  *
- * @package review-requester-for-woocommerce\template\email\
+ * @package review-follow-up-for-woocommerce\template\email\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
 
-namespace RRW;
+namespace REVIFOUP;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,8 +28,8 @@ $default_html = "<p>Hi [customer_name],</p>
 <p>Warmly,</p>
 <p>The [site_name] Team</p>";
 
-$email_title    = get_option( 'rrw_review_email_title', esc_html__( 'Quick favor? We\'d love your feedback!', 'review-requester-for-woocommerce' ) );
-$email_template = get_option( 'rrw_review_email_template', array() );
+$email_title    = get_option( 'revifoup_review_email_title', esc_html__( 'Quick favor? We\'d love your feedback!', 'review-follow-up-for-woocommerce' ) );
+$email_template = get_option( 'revifoup_review_email_template', array() );
 
 $html = isset( $email_template['html'] ) && ! empty( $email_template['html'] ) ? $email_template['html'] : $default_html;
 $css  = isset( $email_template['css'] ) ? $email_template['css'] : '';

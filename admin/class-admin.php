@@ -2,12 +2,12 @@
 /**
  * Admin class.
  *
- * @package review-requester-for-woocommerce\admin\
+ * @package review-follow-up-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
 
-namespace RRW;
+namespace REVIFOUP;
 
 use Pelago\Emogrifier\CssInliner;
 
@@ -21,14 +21,14 @@ class Admin {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var RRW|null
+	 * @var REVIFOUP|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return RRW
+	 * @return REVIFOUP
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -44,6 +44,14 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
+		add_filter( 'stobokit_product_lists', array( $this, 'add_product' ) );
+	}
+
+	public function add_product( $products = array() ) {
+		$products['review-follow-up']['name'] = esc_html__( 'Review Follow Up for WooCommerce', 'review-follow-up-for-woocommerce' );
+		$products['review-follow-up']['id']   = 105;
+
+		return $products;
 	}
 	/**
 	 * Enqueue scripts.
@@ -52,7 +60,7 @@ class Admin {
 	 * @return void
 	 */
 	public function enqueue_scripts( $hook ) {
-		wp_enqueue_style( 'rrw-admin', RRW_URL . '/admin/assets/css/admin.css', array(), '1.0' );
+		wp_enqueue_style( 'revifoup-admin', REVIFOUP_URL . '/admin/assets/css/admin.css', array(), '1.0' );
 	}
 
 	public function order_completed( $order_id = 0 ) {
@@ -61,7 +69,7 @@ class Admin {
 		$order_total = (float) $order->get_total();
 		$email       = $order->get_billing_email();
 
-		$exceed_order_amount = (int) get_option( 'rrw_exceed_order_amount', '' );
+		$exceed_order_amount = (int) get_option( 'revifoup_exceed_order_amount', '' );
 
 		if ( empty( $exceed_order_amount ) || $order_total >= $exceed_order_amount ) {
 			$this->save_data_in_table( $email, $order );
@@ -73,7 +81,7 @@ class Admin {
 
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'rrw_review_requests';
+		$table_name = $wpdb->prefix . 'revifoup_review_requests';
 
 		if ( ! empty( $email ) && null !== $order ) {
 			$order_id = $order->get_ID();
@@ -88,7 +96,7 @@ class Admin {
 
 			if ( ! $exists ) {
 				$wpdb->insert(
-					$wpdb->prefix . 'rrw_review_requests',
+					$wpdb->prefix . 'revifoup_review_requests',
 					array(
 						'email'    => $email,
 						'order_id' => $order_id,
@@ -105,7 +113,7 @@ class Admin {
 	}
 
 	public function set_cron_job( $email, $order ) {
-		$schedule_days = get_option( 'rrw_sent_email_days', 3 );
+		$schedule_days = get_option( 'revifoup_sent_email_days', 3 );
 
 		$schedule = time() + ( $schedule_days * DAY_IN_SECONDS ); // 3 days later
 
@@ -113,15 +121,15 @@ class Admin {
 
 		wp_schedule_single_event(
 			$schedule,
-			'rrw_send_review_email',
+			'revifoup_send_review_email',
 			array( $email, $order )
 		);
 	}
 
 	public function admin_menu() {
 		add_menu_page(
-			esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ),
-			esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ),
+			esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ),
+			esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ),
 			'manage_options',
 			'review-requests',
 			array( $this, 'render_review_request_page' ),
@@ -132,7 +140,7 @@ class Admin {
 
 	public function render_review_request_page() {
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Review Requests', 'review-requester-for-woocommerce' ) . '</h1>';
+		echo '<h1>' . esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ) . '</h1>';
 		$notify_table = new Review_Request_List_Table();
 		$notify_table->prepare_items();
 		echo '<form method="post">';
@@ -141,4 +149,4 @@ class Admin {
 	}
 }
 
-\RRW\Admin::instance();
+\REVIFOUP\Admin::instance();

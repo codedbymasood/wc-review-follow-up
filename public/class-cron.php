@@ -2,12 +2,12 @@
 /**
  * Register cronjobs class.
  *
- * @package review-requester-for-woocommerce\public\
+ * @package review-follow-up-for-woocommerce\public\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */
 
-namespace RRW;
+namespace REVIFOUP;
 
 use Pelago\Emogrifier\CssInliner;
 
@@ -21,14 +21,14 @@ class Cron {
 	/**
 	 * Singleton instance.
 	 *
-	 * @var RRW|null
+	 * @var REVIFOUP|null
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get the singleton instance.
 	 *
-	 * @return RRW
+	 * @return REVIFOUP
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -41,15 +41,15 @@ class Cron {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		add_action( 'rrw_send_review_email', array( $this, 'send_review_email' ), 10, 2 );
+		add_action( 'revifoup_send_review_email', array( $this, 'send_review_email' ), 10, 2 );
 	}
 
 	public function send_review_email( $email, $order ) {
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
-		$subject = get_option( 'rrw_review_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'review-requester-for-woocommerce' ) );
+		$subject = get_option( 'revifoup_review_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'review-follow-up-for-woocommerce' ) );
 
 		ob_start();
-		include RRW_PATH . '/template/email/html-template-email.php';
+		include REVIFOUP_PATH . '/template/email/html-template-email.php';
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -58,9 +58,9 @@ class Cron {
 
 		$result = wp_mail( $email, $subject, $html, $headers ); // we can use `wc_mail` instead.
 		if ( ! $result ) {
-			esc_html_e( 'Mail failed to sent.', 'review-requester-for-woocommerce' );
+			esc_html_e( 'Mail failed to sent.', 'review-follow-up-for-woocommerce' );
 		} else {
-			esc_html_e( 'Mail sent successfully.', 'review-requester-for-woocommerce' );
+			esc_html_e( 'Mail sent successfully.', 'review-follow-up-for-woocommerce' );
 		}
 
 		// TODO: Change status to `sent` or `failed`.
@@ -68,7 +68,7 @@ class Cron {
 
 }
 
-\RRW\Cron::instance();
+\REVIFOUP\Cron::instance();
 
 
 

@@ -1,7 +1,7 @@
 (function($) {
   'use strict';
   
-  $('#rrw-notify-form').on( 'submit', function(e) {
+  $('#revifoup-notify-form').on( 'submit', function(e) {
     e.preventDefault();
     
     const $form = $(this);
@@ -13,7 +13,7 @@
       email,
       product,
       nonce,
-      action : 'rrw_save_notify_email'
+      action : 'revifoup_save_notify_email'
     };
 
     $.ajax({
@@ -22,10 +22,10 @@
       data,
       success: function(data) {
         $form.find('input[name="email"]').val('');
-        $form.append(`<span class="rrw-notice">${data}</span>`);
+        $form.append(`<span class="revifoup-notice">${data}</span>`);
         
         setTimeout( () => {
-          $('.rrw-notice').remove();
+          $('.revifoup-notice').remove();
         }, 2000 );
       }
     });
