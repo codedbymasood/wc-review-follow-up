@@ -40,6 +40,10 @@ body[class*="stobokit"] #wpfooter {
   margin: 0;
 }
 
+.stobokit-wrapper.spacing {
+  margin: 40px;
+}
+
 .stobokit-wrapper .license-notice,
 .stobokit-wrapper .settings-notice {
   top: -52px;

@@ -87,8 +87,8 @@ add_action(
 		);
 
 		new Settings(
-			'review-requests',          // Parent menu slug.
-			'review-requests-settings', // menu slug.
+			'stobokit-review-requests',          // Parent menu slug.
+			'stobokit-review-requests-settings', // menu slug.
 			esc_html__( 'Settings', 'review-follow-up-for-woocommerce' ),
 			esc_html__( 'Settings', 'review-follow-up-for-woocommerce' ),
 			'manage_options',

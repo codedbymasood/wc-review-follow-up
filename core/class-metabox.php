@@ -94,8 +94,10 @@ class Metabox {
 			echo '</div>';
 			echo '</div>';
 		} else {
+			echo '<div class="stobokit-wrapper spacing">';
 			// Render single group.
 			$this->render_fields( reset( $this->fields ), $post );
+			echo '</div>';
 		}
 	}
 
