@@ -47,8 +47,8 @@ class Admin {
 	}
 
 	public function add_product( $products = array() ) {
-		$products['review-follow-up']['name'] = esc_html__( 'Review Follow Up for WooCommerce', 'review-follow-up-for-woocommerce' );
-		$products['review-follow-up']['id']   = 105;
+		$products['review-follow-up-for-woocommerce']['name'] = esc_html__( 'Review Follow Up for WooCommerce', 'review-follow-up-for-woocommerce' );
+		$products['review-follow-up-for-woocommerce']['id']   = 105;
 
 		return $products;
 	}
