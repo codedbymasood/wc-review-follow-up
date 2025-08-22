@@ -1,8 +1,9 @@
 <?php
 /**
  * Core classes.
+ * It is a core class for all the plugins that holds the essential classes.
  *
- * @package review-follow-up-for-woocommerce\core\
+ * @package store-boost-kit
  * @author Store Boost Kit <hello@storeboostkit.com>
  * @version 1.0
  */
@@ -22,3 +23,5 @@ require_once STOBOKIT_PATH . '/class-license.php';
 require_once STOBOKIT_PATH . '/class-admin.php';
 require_once STOBOKIT_PATH . '/class-settings.php';
 require_once STOBOKIT_PATH . '/class-metabox.php';
+require_once STOBOKIT_PATH . '/class-plugin-updater.php';
+require_once STOBOKIT_PATH . '/update-handler.php';

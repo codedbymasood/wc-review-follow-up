@@ -59,6 +59,13 @@ class Settings {
 	private $capability;
 
 	/**
+	 * Menu icon.
+	 *
+	 * @var string
+	 */
+	private $icon;
+
+	/**
 	 * Setting fields.
 	 *
 	 * @var array
@@ -87,15 +94,17 @@ class Settings {
 	 * @param string  $page_title Page title.
 	 * @param string  $menu_title Menu title.
 	 * @param string  $capability Capability.
+	 * @param string  $icon Menu icon.
 	 * @param boolean $direct Load directly or separated.
 	 * @param array   $fields Setting fields.
 	 */
-	public function __construct( $parent_slug, $menu_slug, $page_title, $menu_title, $capability, $direct, $fields ) {
+	public function __construct( $parent_slug, $menu_slug, $page_title, $menu_title, $capability, $icon, $direct, $fields ) {
 		$this->parent_slug = $parent_slug;
 		$this->menu_slug   = $menu_slug;
 		$this->page_title  = $page_title;
 		$this->menu_title  = $menu_title;
 		$this->capability  = $capability;
+		$this->icon        = $icon;
 		$this->direct      = $direct;
 		$this->fields      = $fields;
 
@@ -103,7 +112,7 @@ class Settings {
 		$this->nonce_name   = $menu_slug . '_nonce';
 		$this->nonce_action = $menu_slug . '_action';
 
-		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 20 );
+		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 10 );
 		add_action( 'admin_init', array( $this, 'save_settings' ) );
 	}
 
@@ -120,6 +129,8 @@ class Settings {
 				$this->capability,
 				$this->menu_slug,
 				array( $this, 'render_settings_page' ),
+				$this->icon,
+				50
 			);
 		} else {
 			add_submenu_page(
@@ -345,8 +356,8 @@ class Settings {
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
 						echo '<ul class="tab-nav">';
-							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'review-requester-for-woocommerce' ) . '</li>';
-							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'review-requester-for-woocommerce' ) . '</li>';
+							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'store-boost-kit' ) . '</li>';
+							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'store-boost-kit' ) . '</li>';
 						echo '</ul>';
 					}
 

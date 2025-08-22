@@ -36,27 +36,29 @@ $status_data = array(
 );
 
 ?>
-<div class="status-table wrap">
-	<h1><?php esc_html_e( 'Plugin Status', 'myplugin' ); ?></h1>
-	<?php
-	foreach ( $status_data as $table_title => $data ) {
-		?>
-		<h2><?php echo esc_html( $table_title ); ?></h2>
-		<table class="widefat striped">
-			<tbody>
-			<?php
-			foreach ( $data as $label => $value ) {
-				?>
-				<tr>
-					<th><?php echo esc_html( $label ); ?></th>
-					<td><?php echo esc_html( $value ); ?></td>
-				</tr>
-				<?php
-			}
-			?>
-			</tbody>
-		</table>
+<div class="stobokit-wrapper no-spacing">
+	<div class="status-table wrap">
+		<h1><?php esc_html_e( 'Plugin Status', 'store-boost-kit' ); ?></h1>
 		<?php
-	}
-	?>
+		foreach ( $status_data as $table_title => $data ) {
+			?>
+			<h3><?php echo esc_html( $table_title ); ?></h3>
+			<table class="widefat striped">
+				<tbody>
+				<?php
+				foreach ( $data as $label => $value ) {
+					?>
+					<tr>
+						<th><?php echo esc_html( $label ); ?></th>
+						<td><?php echo esc_html( $value ); ?></td>
+					</tr>
+					<?php
+				}
+				?>
+				</tbody>
+			</table>
+			<?php
+		}
+		?>
+	</div>
 </div>

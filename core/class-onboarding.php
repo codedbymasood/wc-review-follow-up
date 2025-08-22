@@ -75,19 +75,20 @@ class Onboarding {
 	 */
 	public function __construct( $args = array() ) {
 		$defaults = array(
+			'path'          => '',
 			'plugin_slug'   => '',
 			'textdomain'    => '',
 			'steps'         => array(),
-			'redirect_page' => 'options-general.php',
 			'page_slug'     => 'store-boost-kit',
 			'option_prefix' => 'store-boost-kit',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
+		$this->path          = $args['path'];
 		$this->plugin_slug   = $args['plugin_slug'];
 		$this->steps         = $args['steps'];
-		$this->redirect_page = $args['redirect_page'];
+		$this->redirect_page = admin_url( 'admin.php?page=stobokit-dashboard' );
 		$this->page_slug     = $args['page_slug'];
 		$this->option_prefix = $args['option_prefix'];
 
@@ -108,8 +109,8 @@ class Onboarding {
 	public function register_onboarding_page() {
 		add_submenu_page(
 			null,
-			esc_html__( 'Onboarding', 'review-follow-up-for-woocommerce' ),
-			esc_html__( 'Onboarding', 'review-follow-up-for-woocommerce' ),
+			esc_html__( 'Onboarding', 'store-boost-kit' ),
+			esc_html__( 'Onboarding', 'store-boost-kit' ),
 			'manage_options',
 			$this->page_slug,
 			array( $this, 'render_page' )
@@ -133,9 +134,8 @@ class Onboarding {
 	 * @return bool
 	 */
 	protected function step_file_exists( $step ) {
-		$plugin_base_path = plugin_dir_path( dirname( __FILE__, 1 ) );
 
-		$step_file = $plugin_base_path . 'onboarding/step-' . $step . '.php';
+		$step_file = $this->path . 'onboarding/step-' . $step . '.php';
 		return file_exists( $step_file );
 	}
 
@@ -146,9 +146,7 @@ class Onboarding {
 	 * @return string
 	 */
 	protected function get_step_file_path( $step ) {
-		$plugin_base_path = plugin_dir_path( dirname( __FILE__, 1 ) );
-
-		return $plugin_base_path . '/onboarding/step-' . $step . '.php';
+		return $this->path . '/onboarding/step-' . $step . '.php';
 	}
 
 	/**
@@ -179,7 +177,7 @@ class Onboarding {
 			} else {
 				?>
 				<div class="notice notice-error">
-					<p><?php esc_html_e( 'Step file missing. Please contact support.', 'review-follow-up-for-woocommerce' ); ?></p>
+					<p><?php esc_html_e( 'Step file missing. Please contact support.', 'store-boost-kit' ); ?></p>
 				</div>
 				<?php
 			}
@@ -199,18 +197,18 @@ class Onboarding {
 			<?php if ( $current_pos > 0 ) : ?>
 				<?php $prev_step = $step_keys[ $current_pos - 1 ]; ?>
 				<a class="btn stobokit-button--prev" href="<?php echo esc_url( add_query_arg( 'step', $prev_step ) ); ?>">
-					&larr; <?php esc_html_e( 'Back', 'review-follow-up-for-woocommerce' ); ?>
+					&larr; <?php esc_html_e( 'Back', 'store-boost-kit' ); ?>
 				</a>
 			<?php endif; ?>
 
 			<?php if ( $current_pos < count( $step_keys ) - 1 ) : ?>
 				<?php $next_step = $step_keys[ $current_pos + 1 ]; ?>
 				<a class="btn stobokit-button--next" href="<?php echo esc_url( add_query_arg( 'step', $next_step ) ); ?>">
-					<?php esc_html_e( 'Continue', 'review-follow-up-for-woocommerce' ); ?> &rarr;
+					<?php esc_html_e( 'Continue', 'store-boost-kit' ); ?> &rarr;
 				</a>
 			<?php else : ?>
-				<a class="btn stobokit-button--finish" href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->redirect_page . '&onboarding=complete' ) ); ?>">
-					<?php esc_html_e( 'Finish', 'review-follow-up-for-woocommerce' ); ?>
+				<a class="btn stobokit-button--finish" href="<?php echo esc_url( $this->redirect_page . '&onboarding=complete' ); ?>">
+					<?php esc_html_e( 'Finish', 'store-boost-kit' ); ?>
 				</a>
 			<?php endif; ?>
 		</div>
@@ -248,7 +246,7 @@ class Onboarding {
 	public function render_page() {
 		?>
 		<div class="stobokit-wrapper stobokit-onboarding">
-			<h1><?php esc_html_e( 'Getting Things Ready', 'review-follow-up-for-woocommerce' ); ?></h1>
+			<h1><?php esc_html_e( 'Getting Things Ready', 'store-boost-kit' ); ?></h1>
 			<?php $this->render_progress_bar(); ?>
 			<?php $this->render_step_navigation(); ?>
 			<?php $this->render_step_content(); ?>
@@ -350,7 +348,7 @@ class Onboarding {
 	public function handle_onboarding_completion() {
 		if ( isset( $_GET['onboarding'] ) && 'complete' === $_GET['onboarding'] ) {
 			$this->complete_onboarding();
-			wp_safe_redirect( admin_url( 'admin.php?page=' . $this->redirect_page ) );
+			wp_safe_redirect( $this->redirect_page );
 			exit;
 		}
 	}

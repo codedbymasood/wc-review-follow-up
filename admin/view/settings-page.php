@@ -92,6 +92,7 @@ add_action(
 			esc_html__( 'Settings', 'review-follow-up-for-woocommerce' ),
 			esc_html__( 'Settings', 'review-follow-up-for-woocommerce' ),
 			'manage_options',
+			'dashicon-email',
 			0,
 			$fields
 		);

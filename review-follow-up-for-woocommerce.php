@@ -82,7 +82,6 @@ function revifoup_init() {
 			'path'          => REVIFOUP_PATH,
 			'plugin_slug'   => 'review-follow-up-for-woocommerce',
 			'steps'         => $steps,
-			'redirect_page' => 'stobokit-review-follow-up-settings',
 			'page_slug'     => 'stobokit-onboarding-revifoup',
 			'option_prefix' => 'revifoup_onboarding',
 		)

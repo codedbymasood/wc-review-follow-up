@@ -2,7 +2,7 @@
 /**
  * Utils class.
  *
- * @package review-follow-up-for-woocommerce\admin\
+ * @package product-expiry-manager-for-woocommerce\admin\
  * @author Masood Mohamed <iam.masoodmohd@gmail.com>
  * @version 1.0
  */

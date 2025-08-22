@@ -19,8 +19,8 @@ class License {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_sbk_activate_license', array( $this, 'activate_license' ) );
-		add_action( 'wp_ajax_sbk_deactivate_license', array( $this, 'deactivate_license' ) );
+		add_action( 'wp_ajax_stobokit_activate_license', array( $this, 'activate_license' ) );
+		add_action( 'wp_ajax_stobokit_deactivate_license', array( $this, 'deactivate_license' ) );
 	}
 
 	/**

@@ -121,14 +121,15 @@ class Admin {
 			esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ),
 			esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ),
 			'manage_options',
-			'review-requests',
+			'stobokit-review-requests',
 			array( $this, 'render_review_request_page' ),
 			'dashicons-email',
-			26
+			50
 		);
 	}
 
 	public function render_review_request_page() {
+		echo '<div class="stobokit-wrapper no-spacing">';
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ) . '</h1>';
 		$notify_table = new Review_Request_List_Table();
@@ -136,6 +137,7 @@ class Admin {
 		echo '<form method="post">';
 		$notify_table->display();
 		echo '</form></div>';
+		echo '</div>';
 	}
 }
 
