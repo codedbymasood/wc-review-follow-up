@@ -48,7 +48,9 @@ $GLOBALS['revifoup'] = revifoup();
  */
 
 // Include the onboarding class.
-require_once dirname( REVIFOUP_PLUGIN_FILE ) . '/core/class-onboarding.php';
+if ( ! class_exists( '\STOBOKIT\Onboarding' ) ) {
+	include_once dirname( REVIFOUP_PLUGIN_FILE ) . '/core/class-onboarding.php';
+}
 
 register_activation_hook( __FILE__, 'revifoup_on_plugin_activation' );
 
