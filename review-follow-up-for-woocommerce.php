@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Review Follow Up for WooCommerce
  * Plugin URI: https://github.com/codedbymasood/wc-review-requester
- * Description: Add a "Notify Me" button for out-of-stock products, send back-in-stock alerts and follow-up emails with unique discount codes.
+ * Description: Automatically send follow-up emails to collect customer reviews in your WooCommerce store.
  * Version: 1.0
  * Author: Masood Mohamed
  * Author URI: https://github.com/codedbymasood

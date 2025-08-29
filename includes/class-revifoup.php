@@ -42,18 +42,16 @@ final class REVIFOUP {
 		$this->define_constants();
 
 		$this->load_dependencies();
+		$this->init_core();
+
+		// Assign template override.
+		$this->templates = \StoboKit\Template_Factory::get_instance(
+			'review-follow-up-for-woocommerce',
+			REVIFOUP_PLUGIN_FILE
+    );
+
 		$this->init_hooks();
 	}
-
-	/**
-	 * Prevent cloning.
-	 */
-	private function __clone() {}
-
-	/**
-	 * Prevent unserializing.
-	 */
-	private function __wakeup() {}
 
 	/**
 	 * Define plugin constants.
@@ -62,6 +60,13 @@ final class REVIFOUP {
 		define( 'REVIFOUP_VERSION', '1.0.0' );
 		define( 'REVIFOUP_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
 		define( 'REVIFOUP_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+	}
+
+	/**
+	 * Load core.
+	 */
+	private function init_core() {
+		require_once RESTALER_PATH . '/core/init-core.php';
 	}
 
 	/**
