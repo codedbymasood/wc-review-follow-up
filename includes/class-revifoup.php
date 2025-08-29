@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 final class REVIFOUP {
 
+	public $templates;
+
 	/**
 	 * Singleton instance.
 	 *
@@ -66,15 +68,13 @@ final class REVIFOUP {
 	 * Load core.
 	 */
 	private function init_core() {
-		require_once RESTALER_PATH . '/core/init-core.php';
+		require_once REVIFOUP_PATH . '/core/init-core.php';
 	}
 
 	/**
 	 * Load required files.
 	 */
 	private function load_dependencies() {
-		require_once REVIFOUP_PATH . '/core/init-core.php';
-
 		require_once REVIFOUP_PATH . '/public/class-cron.php';
 		require_once REVIFOUP_PATH . '/public/class-frontend.php';
 

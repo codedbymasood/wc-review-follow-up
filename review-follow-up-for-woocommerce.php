@@ -1,11 +1,12 @@
 <?php
 /**
  * Plugin Name: Review Follow Up for WooCommerce
+ * Requires Plugins: woocommerce
  * Plugin URI: https://github.com/codedbymasood/wc-review-requester
  * Description: Automatically send follow-up emails to collect customer reviews in your WooCommerce store.
  * Version: 1.0
- * Author: Masood Mohamed
- * Author URI: https://github.com/codedbymasood
+ * Author: Store Boost Kit
+ * Author URI: https://storeboostkit.com/
  * Text Domain: review-follow-up-for-woocommerce
  * Domain Path: /languages/
  * Requires at least: 6.6
