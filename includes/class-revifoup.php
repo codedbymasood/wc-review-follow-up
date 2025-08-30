@@ -16,6 +16,18 @@ defined( 'ABSPATH' ) || exit;
  */
 final class REVIFOUP {
 
+	/**
+	 * Logger class
+	 *
+	 * @var \StoboKit\Logger
+	 */
+	public $logger;
+
+	/**
+	 * Template override class.
+	 *
+	 * @var \StoboKit\Template_Factory
+	 */
 	public $templates;
 
 	/**
@@ -43,15 +55,18 @@ final class REVIFOUP {
 	private function __construct() {
 		$this->define_constants();
 
-		$this->load_dependencies();
 		$this->init_core();
 
 		// Assign template override.
 		$this->templates = \StoboKit\Template_Factory::get_instance(
 			'review-follow-up-for-woocommerce',
 			REVIFOUP_PLUGIN_FILE
-    );
+		);
 
+		// Logger.
+		$this->logger = new \StoboKit\Logger();
+
+		$this->load_dependencies();
 		$this->init_hooks();
 	}
 
@@ -59,9 +74,15 @@ final class REVIFOUP {
 	 * Define plugin constants.
 	 */
 	private function define_constants() {
-		define( 'REVIFOUP_VERSION', '1.0.0' );
-		define( 'REVIFOUP_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
-		define( 'REVIFOUP_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+		if ( ! defined( 'REVIFOUP_VERSION' ) ) {
+			define( 'REVIFOUP_VERSION', '1.0.0' );
+		}
+		if ( ! defined( 'REVIFOUP_PATH' ) ) {
+			define( 'REVIFOUP_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
+		}
+		if ( ! defined( 'REVIFOUP_URL' ) ) {
+			define( 'REVIFOUP_URL', plugin_dir_url( dirname( __FILE__ ) ) );
+		}
 	}
 
 	/**
