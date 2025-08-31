@@ -127,10 +127,9 @@ final class REVIFOUP {
 
 	public function init_onboarding() {
 		$steps = array(
-			'welcome'            => 'Welcome',
-			'license-activation' => 'Activate License',
-			'settings'           => 'General Setup',
-			'finish'             => 'Finish',
+			'welcome'  => 'Welcome',
+			'settings' => 'General Setup',
+			'finish'   => 'Finish',
 		);
 
 		new \STOBOKIT\Onboarding(

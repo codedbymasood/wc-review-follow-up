@@ -20,6 +20,10 @@ if ( ! defined( 'REVIFOUP_PLUGIN_FILE' ) ) {
 	define( 'REVIFOUP_PLUGIN_FILE', __FILE__ );
 }
 
+if ( ! defined( 'REVIFOUP_VERSION' ) ) {
+	define( 'REVIFOUP_VERSION', '1.0.0' );
+}
+
 /**
  * Development version switcher
  * Use ?revifoup_version=pro or ?revifoup_version=lite in URL to switch versions
