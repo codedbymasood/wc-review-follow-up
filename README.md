@@ -1,64 +1,58 @@
-# WC Review Requester
+# Review Follow Up for WooCommerce
 
-**WC Review Requester** is a WooCommerce plugin that automatically sends review request emails to customers after they purchase a product.
-
-This helps store owners collect valuable feedback, increase social proof, and boost product credibility — all on autopilot.
+A lightweight WooCommerce addon that allows customers to subscribe for notifications when an out-of-stock product is restocked. Includes intelligent follow-up emails and include dynamic discount codes to recover more sales.
 
 ---
 
 ## Features
 
-- Automatically send review request emails after purchase.
-- Schedule emails X days after order completion.
-- Handles multiple products in a single order.
-- Customizable email templates with dynamic placeholders.
+- Show **"Notify Me"** button on out-of-stock product pages
+- Store user email and product info in a custom table
+- Send **automatic email** when the product is back in stock
+- **Track purchases** to prevent unnecessary emails
+- Send **follow-up emails** (2 days later) only if the product wasn’t purchased
+- Generate **unique, time-limited coupon codes** for follow-up
+
+---
+
+## Use Case
+
+1. Customer visits an out-of-stock product and subscribes.
+2. When stock is updated, the plugin sends an email.
+3. If the customer hasn’t purchased within 2 days, a follow-up email with a discount coupon is sent.
+4. After purchase, the customer status changed to completed to prevent unnecessary follow-up.
 
 ---
 
 ## Installation
 
-1. Download the plugin ZIP.
-2. Go to **WordPress Admin → Plugins → Add New**.
-3. Click **Upload Plugin** and select the ZIP file.
-4. Install and activate it.
+1. Upload the plugin folder to `/wp-content/plugins/`
+2. Activate the plugin from the WordPress dashboard
+3. Rest is automated!
 
 ---
 
-## How to Use
+## Cron Info
 
-1. Go to **Review Requester → Settings**.
-2. Set the number of days after order completion to send the review request.
-3. Customize the email content using dynamic tags like `{customer_name}`, `{site_name}`, `{items}`.
-5. Save settings — you're done!
+- Uses **`wp_schedule_single_event()`** to send follow-ups per subscriber
+- Make sure your WP-Cron is running correctly (or set a real cron job for reliability)
 
 ---
 
-## Dynamic Tags
+## Support
 
-You can use the following tags in your email content:
-
-| Tag               | Replaced With                    |
-|-------------------|----------------------------------|
-| `{customer_name}` | Customer name                    |
-| `{site_name}`     | Your WordPress site name         |
-| `{items}`         | Ordered items with review link   |
-
----
-
-## Requirements
-
-- WordPress 6.0 or higher  
-- WooCommerce 7.0 or higher  
-- PHP 7.4 or higher  
+This plugin is developer-focused. For issues or contributions, feel free to open an issue or pull request.
 
 ---
 
 ## License
 
-Licensed under the [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html).
+GPLv2 or later
 
 ---
 
 ## Author
 
 Made with care by [Masood Mohamed](https://github.com/codedbymasood)
+Follow me on [Twitter](https://x.com/masoodmohamed90)
+Connect me on [Linkedin](https://www.linkedin.com/in/masoodmohamed/)
