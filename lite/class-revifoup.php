@@ -3,7 +3,7 @@
  * Plugin initialization class.
  *
  * @package review-follow-up-for-woocommerce\includes\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -117,11 +117,31 @@ final class REVIFOUP {
 	 * Hook into WordPress.
 	 */
 	private function init_hooks() {
+		add_action( 'plugins_loaded', array( $this, 'init_onboarding' ) );
 		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
 
 		// Create a table when activate the plugin.
 		register_activation_hook( REVIFOUP_PLUGIN_FILE, array( $this, 'create_email_logs_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
+	}
+
+	public function init_onboarding() {
+		$steps = array(
+			'welcome'            => 'Welcome',
+			'license-activation' => 'Activate License',
+			'settings'           => 'General Setup',
+			'finish'             => 'Finish',
+		);
+
+		new \STOBOKIT\Onboarding(
+			array(
+				'path'          => REVIFOUP_PATH,
+				'plugin_slug'   => 'review-follow-up-for-woocommerce',
+				'steps'         => $steps,
+				'page_slug'     => 'stobokit-onboarding-revifoup',
+				'option_prefix' => 'revifoup_onboarding',
+			)
+		);
 	}
 
 	public function ensure_table_exists() {

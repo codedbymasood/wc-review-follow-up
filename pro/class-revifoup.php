@@ -3,7 +3,7 @@
  * Plugin initialization class.
  *
  * @package review-follow-up-for-woocommerce\includes\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -101,6 +101,8 @@ final class REVIFOUP {
 			require_once REVIFOUP_PATH . '/common/admin/class-admin.php';
 			require_once REVIFOUP_PATH . '/common/admin/class-review-request-list-table.php';
 		}
+
+		require REVIFOUP_PATH . '/common/admin/init-update.php';
 	}
 
 	/**

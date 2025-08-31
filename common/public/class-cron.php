@@ -3,7 +3,7 @@
  * Register cronjobs class.
  *
  * @package review-follow-up-for-woocommerce\public\
- * @author Masood Mohamed <iam.masoodmohd@gmail.com>
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
