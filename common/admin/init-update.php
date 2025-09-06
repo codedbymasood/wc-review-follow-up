@@ -2,7 +2,7 @@
 /**
  * Admin class.
  *
- * @package review-follow-up-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 $args = array(
 	'file'      => REVIFOUP_PLUGIN_FILE,
-	'slug'      => 'review-follow-up-for-woocommerce',
+	'slug'      => 'plugin-slug',
 	'version'   => REVIFOUP_VERSION,
-	'license'   => get_option( 'review-follow-up-for-woocommerce_license_key', '' ),
-	'item_name' => 'Review Follow Up for WooCommerce',
+	'license'   => get_option( 'plugin-slug_license_key', '' ),
+	'item_name' => 'Plugin Name',
 	'item_id'   => 105,
 );
 

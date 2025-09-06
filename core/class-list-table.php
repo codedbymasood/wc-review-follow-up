@@ -17,7 +17,7 @@
  *   return $filter_data;
  * });
  *
- * @package restock-alerts-for-woocommerce\admin\
+ * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -103,7 +103,7 @@ class List_Table extends \WP_List_Table {
 			$this->id . '_table_columns',
 			array(
 				'cb' => '<input type="checkbox" />',
-				'id' => esc_html__( 'ID', 'store-boost-kit' ),
+				'id' => esc_html__( 'ID', 'plugin-slug' ),
 			)
 		);
 	}
@@ -147,7 +147,7 @@ class List_Table extends \WP_List_Table {
 		return apply_filters(
 			$this->id . '_table_bulk_actions',
 			array(
-				'delete' => esc_html__( 'Delete permanently', 'store-boost-kit' ),
+				'delete' => esc_html__( 'Delete permanently', 'plugin-slug' ),
 			)
 		);
 	}
@@ -186,12 +186,15 @@ class List_Table extends \WP_List_Table {
 		// Process delete action.
 		if ( 'delete' === $current_action && ! empty( $_REQUEST[ $this->singular ] ) ) {
 
-			$ids   = array_map( 'absint', $_REQUEST[ $this->singular ] );
+			$ids = array_map( 'absint', $_REQUEST[ $this->singular ] );
 
 			if ( ! empty( $ids ) ) {
 				$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 				$query        = "DELETE FROM $table WHERE id IN ($placeholders)";
 
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$wpdb->query( $wpdb->prepare( $query, ...$ids ) );
 			}
 		}
@@ -218,6 +221,10 @@ class List_Table extends \WP_List_Table {
 		$where_clause = '1=1';
 		$where_params = array();
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    // phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		if ( ! empty( $search ) ) {
 			$searchable_columns = $this->get_searchable_columns();
 			if ( ! empty( $searchable_columns ) ) {
@@ -225,7 +232,7 @@ class List_Table extends \WP_List_Table {
 
 				foreach ( $searchable_columns as $column ) {
 					$search_conditions[] = "$column LIKE %s";
-					$where_params[] = '%' . $wpdb->esc_like( $search ) . '%';
+					$where_params[]      = '%' . $wpdb->esc_like( $search ) . '%';
 				}
 
 				if ( ! empty( $search_conditions ) ) {
@@ -257,13 +264,16 @@ class List_Table extends \WP_List_Table {
 		}
 
 		// Get the actual data.
-		$query = "SELECT * FROM $table WHERE $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
+		$query        = "SELECT * FROM $table WHERE $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d";
 		$query_params = array_merge( $where_params, array( $per_page, $offset ) );
 
 		$this->items = $wpdb->get_results(
-			$wpdb->prepare( $query, $query_params ),
+			$wpdb->prepare(
+				"SELECT * FROM $table WHERE $where_clause ORDER BY $orderby $order LIMIT %d OFFSET %d",
+				$query_params
+			),
 			ARRAY_A
-		); // WPCS: cache ok, db call ok.
+		);
 
 		$this->_column_headers = array( $this->get_columns(), array(), $this->get_sortable_columns() );
 

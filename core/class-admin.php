@@ -2,8 +2,8 @@
 /**
  * Admin class.
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -23,7 +23,68 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
+		// Create a table when activate the plugin.
+		register_activation_hook( REVIFOUP_PLUGIN_FILE, array( $this, 'create_scheduler_logs_table' ) );
+		add_action( 'plugins_loaded', array( $this, 'maybe_create_table' ) );
+
 		add_action( 'wp_ajax_stobokit_save_settings', array( $this, 'save_settings' ) );
+	}
+
+	/**
+	 * Make sure the table exists, otherwise create the required table.
+	 *
+	 * @return void
+	 */
+	public function maybe_create_table() {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'stobokit_scheduler_logs';
+
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$table
+			)
+		);
+
+		if ( $table_exists !== $table ) {
+			$this->create_scheduler_logs_table();
+		}
+	}
+
+	/**
+	 * Create a alert table.
+	 *
+	 * @return void
+	 */
+	public function create_scheduler_logs_table() {
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'stobokit_scheduler_logs';
+
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE {$table} (
+			id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			uid varchar(64) NOT NULL,
+			hook_name varchar(255) NOT NULL,
+			args varchar(32) NOT NULL,
+			schedule varchar(50) DEFAULT NULL,
+			next_run datetime DEFAULT NULL,
+			status varchar(20) NOT NULL DEFAULT 'scheduled',
+			attempts tinyint(3) unsigned NOT NULL DEFAULT 0,
+			created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (id),
+			UNIQUE KEY idx_uid (uid),
+			KEY idx_hook_name (hook_name),
+			KEY idx_status_next_run (status, next_run)
+	) $charset_collate;";
+
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		dbDelta( $sql );
 	}
 
 	/**
@@ -32,15 +93,15 @@ class Admin {
 	 * @return void
 	 */
 	public function save_settings() {
-		if ( ! isset( $_POST['nonce'] ) && ! empty( isset( $_POST['nonce'] ) ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_save_settings' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_save_settings' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),
+					'message' => esc_html__( 'Sorry, not verified.', 'plugin-slug' ),
 				)
 			);
 		}
 
-		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? $_POST['inputs'] : array();
+		$inputs = isset( $_POST['inputs'] ) && ! empty( $_POST['inputs'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['inputs'] ) ) : array();
 
 		if ( ! empty( $inputs ) ) {
 			foreach ( $inputs as $index => $field ) {
@@ -52,7 +113,7 @@ class Admin {
 
 		wp_send_json_success(
 			array(
-				'message' => esc_html__( 'Settings saved!', 'store-boost-kit' ),
+				'message' => esc_html__( 'Settings saved!', 'plugin-slug' ),
 			)
 		);
 
@@ -84,8 +145,8 @@ class Admin {
 		$icon = $this->get_svg_icon();
 
 		add_menu_page(
-			esc_html__( 'Store Boost Kit', 'store-boost-kit' ),
-			esc_html__( 'Store Boost Kit', 'store-boost-kit' ),
+			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
+			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' ),
@@ -95,8 +156,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'Dashboard', 'store-boost-kit' ),
-			esc_html__( 'Dashboard', 'store-boost-kit' ),
+			esc_html__( 'Dashboard', 'plugin-slug' ),
+			esc_html__( 'Dashboard', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' )
@@ -104,8 +165,8 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'Status', 'store-boost-kit' ),
-			esc_html__( 'Status', 'store-boost-kit' ),
+			esc_html__( 'Status', 'plugin-slug' ),
+			esc_html__( 'Status', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-status',
 			array( $this, 'status' )
@@ -113,13 +174,12 @@ class Admin {
 
 		add_submenu_page(
 			'stobokit-dashboard',
-			esc_html__( 'License', 'store-boost-kit' ),
-			esc_html__( 'License', 'store-boost-kit' ),
+			esc_html__( 'License', 'plugin-slug' ),
+			esc_html__( 'License', 'plugin-slug' ),
 			'manage_options',
 			'stobokit-license',
 			array( $this, 'license' )
 		);
-
 	}
 
 	/**

@@ -24,6 +24,14 @@ if ( ! defined( 'REVIFOUP_VERSION' ) ) {
 	define( 'REVIFOUP_VERSION', '1.0.0' );
 }
 
+if ( ! defined( 'REVIFOUP_PATH' ) ) {
+	define( 'REVIFOUP_PATH', plugin_dir_path( __FILE__ ) );
+}
+
+if ( ! defined( 'REVIFOUP_URL' ) ) {
+	define( 'REVIFOUP_URL', plugin_dir_url( __FILE__ ) );
+}
+
 /**
  * Development version switcher
  * Use ?revifoup_version=pro or ?revifoup_version=lite in URL to switch versions
@@ -42,7 +50,7 @@ function revifoup_development_init() {
 		add_filter(
 			'stobokit_frontend_template_file',
 			function ( $template_file = '' ) {
-				return str_replace( 'templates', 'templates/pro', $template_file );
+				return ( strpos( $template_file, 'pro' ) !== false ) ? $template_file : str_replace( 'templates', 'templates/pro', $template_file );
 			}
 		);
 
@@ -64,7 +72,7 @@ function revifoup_development_init() {
 		add_filter(
 			'stobokit_frontend_template_file',
 			function ( $template_file = '' ) {
-				return str_replace( 'templates', 'templates/lite', $template_file );
+				return ( strpos( $template_file, 'lite' ) !== false ) ? $template_file : str_replace( 'templates', 'templates/lite', $template_file );
 			}
 		);
 

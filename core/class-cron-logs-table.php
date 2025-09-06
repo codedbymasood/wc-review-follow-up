@@ -1,24 +1,20 @@
 <?php
 /**
- * Table holds all the notify details.
+ * Cron table.
  *
- * @package plugin-slug\admin\
+ * @package plugin-slug\core\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
-namespace REVIFOUP;
+namespace STOBOKIT;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
 /**
- * Table holds all the notify details.
+ * Cron table.
  */
-class Review_Request_List_Table extends \STOBOKIT\List_Table {
+class Cron_Logs_Table extends \STOBOKIT\List_Table {
 	/**
 	 * Constructor.
 	 *
@@ -27,8 +23,8 @@ class Review_Request_List_Table extends \STOBOKIT\List_Table {
 	public function __construct( $args = array() ) {
 		parent::__construct( $args );
 
-		add_filter( 'revifoup_review_requests_table_columns', array( $this, 'custom_columns' ) );
-		add_filter( 'revifoup_review_requests_table_sortable_columns', array( $this, 'sortable_columns' ) );
+		add_filter( 'scheduler_logs_table_columns', array( $this, 'custom_columns' ) );
+		add_filter( 'scheduler_logs_table_sortable_columns', array( $this, 'sortable_columns' ) );
 	}
 
 	/**
@@ -39,11 +35,13 @@ class Review_Request_List_Table extends \STOBOKIT\List_Table {
 	public function custom_columns() {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'id'         => esc_html__( 'Order ID', 'plugin-slug' ),
-			'email'      => esc_html__( 'Email', 'plugin-slug' ),
+			'id'         => esc_html__( 'ID', 'plugin-slug' ),
+			'hook_name'  => esc_html__( 'Hook', 'plugin-slug' ),
 			'status'     => esc_html__( 'Status', 'plugin-slug' ),
+			'args'       => esc_html__( 'Arguments', 'plugin-slug' ),
 			'created_at' => esc_html__( 'Created At', 'plugin-slug' ),
-			'sent_at'    => esc_html__( 'Sent At', 'plugin-slug' ),
+			'schedule'   => esc_html__( 'Schedule', 'plugin-slug' ),
+			'next_run'   => esc_html__( 'Next Run', 'plugin-slug' ),
 		);
 	}
 
@@ -92,12 +90,42 @@ class Review_Request_List_Table extends \STOBOKIT\List_Table {
 	}
 
 	/**
-	 * Sent at column.
+	 * Created at column.
 	 *
 	 * @param array $item Table row item.
 	 * @return string
 	 */
-	public function column_sent_at( $item ) {
-		return $item['sent_at'];
+	public function column_hook_name( $item ) {
+		return $item['hook_name'];
+	}
+
+	/**
+	 * Created at column.
+	 *
+	 * @param array $item Table row item.
+	 * @return string
+	 */
+	public function column_args( $item ) {
+		return $item['args'];
+	}
+
+	/**
+	 * Created at column.
+	 *
+	 * @param array $item Table row item.
+	 * @return string
+	 */
+	public function column_schedule( $item ) {
+		return $item['schedule'];
+	}
+
+	/**
+	 * Created at column.
+	 *
+	 * @param array $item Table row item.
+	 * @return string
+	 */
+	public function column_next_run( $item ) {
+		return $item['next_run'];
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * Plugin initialization class.
  *
- * @package review-follow-up-for-woocommerce\includes\
+ * @package plugin-slug\includes\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -53,36 +53,25 @@ final class REVIFOUP {
 	 * Plugin constructor.
 	 */
 	private function __construct() {
-		$this->define_constants();
-
 		$this->init_core();
 
 		// Assign template override.
 		$this->templates = \StoboKit\Template_Factory::get_instance(
-			'review-follow-up-for-woocommerce',
+			'plugin-slug',
 			REVIFOUP_PLUGIN_FILE
 		);
+
+		// Emailer.
+		$this->emailer = \StoboKit\Emailer::get_instance();
 
 		// Logger.
 		$this->logger = new \StoboKit\Logger();
 
+		// Schedule logger.
+		$this->scheduler = new \StoboKit\Schedule_Logger();
+
 		$this->load_dependencies();
 		$this->init_hooks();
-	}
-
-	/**
-	 * Define plugin constants.
-	 */
-	private function define_constants() {
-		if ( ! defined( 'REVIFOUP_VERSION' ) ) {
-			define( 'REVIFOUP_VERSION', '1.0.0' );
-		}
-		if ( ! defined( 'REVIFOUP_PATH' ) ) {
-			define( 'REVIFOUP_PATH', plugin_dir_path( dirname( __FILE__ ) ) );
-		}
-		if ( ! defined( 'REVIFOUP_URL' ) ) {
-			define( 'REVIFOUP_URL', plugin_dir_url( dirname( __FILE__ ) ) );
-		}
 	}
 
 	/**
@@ -96,7 +85,6 @@ final class REVIFOUP {
 	 * Load required files.
 	 */
 	private function load_common() {
-		require_once REVIFOUP_PATH . '/common/public/class-cron.php';
 		require_once REVIFOUP_PATH . '/common/public/class-frontend.php';
 
 		if ( is_admin() ) {
@@ -121,11 +109,17 @@ final class REVIFOUP {
 		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
 
 		// Create a table when activate the plugin.
-		register_activation_hook( REVIFOUP_PLUGIN_FILE, array( $this, 'create_email_logs_table' ) );
+		register_activation_hook( REVIFOUP_PLUGIN_FILE, array( $this, 'maybe_create_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
 	public function init_onboarding() {
+		static $onboarding_initialized = false;
+		if ( $onboarding_initialized ) {
+			return;
+		}
+		$onboarding_initialized = true;
+
 		$steps = array(
 			'welcome'  => 'Welcome',
 			'settings' => 'General Setup',
@@ -135,7 +129,7 @@ final class REVIFOUP {
 		new \STOBOKIT\Onboarding(
 			array(
 				'path'          => REVIFOUP_PATH,
-				'plugin_slug'   => 'review-follow-up-for-woocommerce',
+				'plugin_slug'   => 'plugin-slug',
 				'steps'         => $steps,
 				'page_slug'     => 'stobokit-onboarding-revifoup',
 				'option_prefix' => 'revifoup_onboarding',
@@ -143,18 +137,36 @@ final class REVIFOUP {
 		);
 	}
 
+	/**
+	 * Make sure the table exists, otherwise create the required table.
+	 *
+	 * @return void
+	 */
 	public function ensure_table_exists() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'revifoup_review_requests';
+		$table = $wpdb->prefix . 'revifoup_review_requests';
 
-		// Check if table exists.
-		if( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
-			$this->create_email_logs_table();
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare(
+				'SHOW TABLES LIKE %s',
+				$table
+			)
+		);
+
+		if ( $table_exists !== $table ) {
+			$this->maybe_create_table();
 		}
 	}
 
-	public function create_email_logs_table() {
+	/**
+	 * Create a table.
+	 *
+	 * @return void
+	 */
+	public function maybe_create_table() {
 
 		global $wpdb;
 
@@ -179,6 +191,11 @@ final class REVIFOUP {
 		dbDelta( $sql );
 	}
 
+	/**
+	 * Enable HPOS
+	 *
+	 * @return void
+	 */
 	public function enable_hpos() {
 		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
 			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(

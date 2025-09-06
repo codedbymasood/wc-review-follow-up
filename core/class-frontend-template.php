@@ -5,7 +5,8 @@
  * Simple template loading with override functionality for WooCommerce plugins
  * Users can override templates by placing them in theme/stobokit/plugin-slug/
  *
- * @package StoboKit Core
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0.0
  */
 
@@ -144,10 +145,6 @@ if ( ! class_exists( 'STOBOKIT\Frontend_Template' ) ) {
 		 * @param array  $args Variables to extract in template.
 		 */
 		private function include_template_file( $template_file, $args = array() ) {
-			// Extract variables for use in template.
-			if ( ! empty( $args ) && is_array( $args ) ) {
-				extract( $args, EXTR_SKIP );
-			}
 
 			// Allow plugins to modify template args.
 			$args = apply_filters( 'stobokit_frontend_template_args', $args, $template_file, $this->plugin_slug );

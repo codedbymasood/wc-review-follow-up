@@ -2,8 +2,8 @@
 /**
  * License class.
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -29,10 +29,10 @@ class License {
 	 * @return void
 	 */
 	public function activate_license() {
-		if ( ! isset( $_POST['nonce'] ) && ! empty( isset( $_POST['nonce'] ) ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),
+					'message' => esc_html__( 'Sorry, not verified.', 'plugin-slug' ),
 				)
 			);
 		}
@@ -67,34 +67,33 @@ class License {
 		} else {
 			$data = json_decode( wp_remote_retrieve_body( $response ) );
 			if ( false === $data->success ) {
-				error_log($data->error);
 				switch ( $data->error ) {
 					case 'expired':
 						$message = sprintf(
 							/* translators: 1: Expiry date */
-							esc_html__( 'Your license key expired on %s.', 'store-boost-kit' ),
+							esc_html__( 'Your license key expired on %s.', 'plugin-slug' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $data->expires, current_time( 'timestamp' ) ) )
 						);
 						break;
 					case 'revoked':
-						$message = esc_html__( 'Your license key has been disabled.', 'store-boost-kit' );
+						$message = esc_html__( 'Your license key has been disabled.', 'plugin-slug' );
 						break;
 					case 'missing':
-						$message = esc_html__( 'Invalid license.', 'store-boost-kit' );
+						$message = esc_html__( 'Invalid license.', 'plugin-slug' );
 						break;
 					case 'invalid':
 					case 'site_inactive':
-						$message = esc_html__( 'Your license is not active for this URL.', 'store-boost-kit' );
+						$message = esc_html__( 'Your license is not active for this URL.', 'plugin-slug' );
 						break;
 					case 'invalid_item_id':
 						/* translators: 1: Plugin name */
-						$message = esc_html__( 'This appears to be an invalid license key for this product.', 'store-boost-kit' );
+						$message = esc_html__( 'This appears to be an invalid license key for this product.', 'plugin-slug' );
 						break;
 					case 'no_activations_left':
-						$message = esc_html__( 'Your license key has reached its activation limit.', 'store-boost-kit' );
+						$message = esc_html__( 'Your license key has reached its activation limit.', 'plugin-slug' );
 						break;
 					default:
-						$message = esc_html__( 'An error occurred, please try again.', 'store-boost-kit' );
+						$message = esc_html__( 'An error occurred, please try again.', 'plugin-slug' );
 						break;
 				}
 			}
@@ -114,7 +113,7 @@ class License {
 
 			wp_send_json_success(
 				array(
-					'message'     => esc_html__( 'License activated succesfully!', 'store-boost-kit' ),
+					'message'     => esc_html__( 'License activated succesfully!', 'plugin-slug' ),
 					'status'      => 'active',
 					'expire_date' => $data->expires,
 				)
@@ -130,10 +129,10 @@ class License {
 	 * @return void
 	 */
 	public function deactivate_license() {
-		if ( ! isset( $_POST['nonce'] ) && ! empty( isset( $_POST['nonce'] ) ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
+		if ( ! isset( $_POST['nonce'] ) || empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'stobokit_license' ) ) {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Sorry, not verified.', 'store-boost-kit' ),
+					'message' => esc_html__( 'Sorry, not verified.', 'plugin-slug' ),
 				)
 			);
 		}
@@ -169,7 +168,7 @@ class License {
 			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
 			} else {
-				$message = esc_html__( 'An error occurred, please try again.', 'store-boost-kit' );
+				$message = esc_html__( 'An error occurred, please try again.', 'plugin-slug' );
 			}
 
 			wp_send_json_error(
@@ -192,7 +191,7 @@ class License {
 
 				wp_send_json_success(
 					array(
-						'message' => esc_html__( 'License deactivated succesfully!', 'store-boost-kit' ),
+						'message' => esc_html__( 'License deactivated succesfully!', 'plugin-slug' ),
 						'status'  => 'inactive',
 					)
 				);

@@ -2,7 +2,7 @@
 /**
  * Admin class.
  *
- * @package review-follow-up-for-woocommerce\admin\
+ * @package plugin-slug\admin\
  * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
@@ -43,14 +43,6 @@ class Admin {
 	private function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'woocommerce_order_status_completed', array( $this, 'order_completed' ) );
-		add_filter( 'stobokit_product_lists', array( $this, 'add_product' ) );
-	}
-
-	public function add_product( $products = array() ) {
-		$products['review-follow-up-for-woocommerce']['name'] = esc_html__( 'Review Follow Up for WooCommerce', 'review-follow-up-for-woocommerce' );
-		$products['review-follow-up-for-woocommerce']['id']   = 105;
-
-		return $products;
 	}
 
 	public function order_completed( $order_id = 0 ) {
@@ -63,7 +55,7 @@ class Admin {
 
 		if ( empty( $exceed_order_amount ) || $order_total >= $exceed_order_amount ) {
 			$this->save_data_in_table( $email, $order );
-			$this->set_cron_job( $email, $order );
+			$this->send_review_request_email( $email, $order );
 		}
 	}
 
@@ -102,26 +94,61 @@ class Admin {
 		}
 	}
 
-	public function set_cron_job( $email, $order ) {
-		$schedule_days = get_option( 'revifoup_sent_email_days', 3 );
+	public function send_review_request_email( $email, $order ) {
+		$schedule_days = (int) get_option( 'revifoup_sent_email_days', 3 );
 
-		$schedule = time() + ( $schedule_days * DAY_IN_SECONDS ); // 3 days later
+		$subject     = get_option( 'revifoup_review_request_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'plugin-slug' ) );
+		$heading     = get_option( 'revifoup_review_request_email_heading', esc_html__( 'Quick favor? We\'d love your feedback!', 'plugin-slug' ) );
+		$footer_text = get_option( 'revifoup_review_request_email_footer_text', esc_html__( 'Thanks again for choosing us!', 'plugin-slug' ) );
 
-		// $schedule = time() + 60; // 2 minutes later
+		$content = get_option(
+			'revifoup_review_request_email_content',
+			"Hi{customer_name},
 
-		wp_schedule_single_event(
-			$schedule,
-			'revifoup_send_review_email',
-			array( $email, $order )
+Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases
+
+We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.
+
+Here's what you ordered:
+
+{ordered_items}
+
+It only takes a minute, and it means a lot to our small team.
+
+Warmly,
+The {site_name} Team"
+		);
+
+		$content = revifoup()->templates->get_template(
+			'email/email-content.php',
+			array(
+				'heading'     => $heading,
+				'content'     => $content,
+				'footer_text' => $footer_text,
+			)
+		);
+
+		// CssInliner loads from WooCommerce.
+		$html = CssInliner::fromHtml( $content )->inlineCss()->render();
+
+		$result = revifoup()->emailer->send_later(
+			$email,
+			$subject,
+			$html,
+			$schedule_days,
+			array(
+				'email' => $email,
+				'order' => $order,
+			)
 		);
 	}
 
 	public function admin_menu() {
 		add_menu_page(
-			esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ),
-			esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ),
+			esc_html__( 'Review Requests', 'plugin-slug' ),
+			esc_html__( 'Review Requests', 'plugin-slug' ),
 			'manage_options',
-			'stobokit-review-requests',
+			'stobokit-revifoup-review-requests',
 			array( $this, 'render_review_request_page' ),
 			'dashicons-email',
 			50
@@ -129,15 +156,16 @@ class Admin {
 	}
 
 	public function render_review_request_page() {
-		echo '<div class="stobokit-wrapper no-spacing">';
-		echo '<div class="wrap">';
-		echo '<h1>' . esc_html__( 'Review Requests', 'review-follow-up-for-woocommerce' ) . '</h1>';
-		$notify_table = new Review_Request_List_Table();
-		$notify_table->prepare_items();
-		echo '<form method="post">';
-		$notify_table->display();
-		echo '</form></div>';
-		echo '</div>';
+		$args = array(
+			'title'      => esc_html__( 'Review Requests', 'plugin-slug' ),
+			'singular'   => 'request',
+			'plural'     => 'requests',
+			'table_name' => 'revifoup_review_requests',
+			'id'         => 'revifoup_review_requests',
+		);
+
+		$table = new Review_Request_List_Table( $args );
+		$table->display_table();
 	}
 }
 

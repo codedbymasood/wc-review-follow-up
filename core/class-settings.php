@@ -2,8 +2,8 @@
 /**
  * Settings class.
  *
- * @package store-boost-kit\admin\
- * @author Store Boost Kit <hello@storeboostkit.com>
+ * @package plugin-slug\core\
+ * @author Store Boost Kit <storeboostkit@gmail.com>
  * @version 1.0
  */
 
@@ -249,14 +249,20 @@ class Settings {
 
 		$admin_url = admin_url( 'admin.php?page=' . $this->menu_slug );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_tab = isset( $_GET['tab'] ) && ! empty( isset( $_GET['tab'] ) ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : Utils::convert_case( $tabs[0] );
 		?>
 		<div class="stobokit-wrapper wrap">
-			<?php if ( isset( $_GET['settings-updated'] ) ) : ?>
+			<?php
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['settings-updated'] ) ) :
+				?>
 				<div class="stobokit-notice">
-					<p><?php esc_html_e( 'Settings saved successfully!', 'store-boost-kit' ); ?></p>
+					<p><?php esc_html_e( 'Settings saved successfully!', 'plugin-slug' ); ?></p>
 				</div>
-			<?php endif; ?>	
+				<?php
+			endif;
+			?>
 
 			<h1><?php echo esc_html( $this->page_title ); ?></h1>	
 			<div class="nav-tab-wrapper horizontal">
@@ -281,7 +287,7 @@ class Settings {
 								<?php endforeach; ?>
 							</div>
 						<?php endforeach; ?>
-						<?php submit_button( esc_html__( 'Save Settings', 'store-boost-kit' ) ); ?>
+						<?php submit_button( esc_html__( 'Save Settings', 'plugin-slug' ) ); ?>
 					</form>
 				</div>
 			</div>
@@ -387,8 +393,8 @@ class Settings {
 
 					if ( in_array( array( 'html', 'css' ), array( $field['options'] ), true ) ) {
 						echo '<ul class="tab-nav">';
-							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'store-boost-kit' ) . '</li>';
-							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'store-boost-kit' ) . '</li>';
+							echo '<li data-type="html" class="' . ( ( 'html' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'HTML', 'plugin-slug' ) . '</li>';
+							echo '<li data-type="css" class="' . ( ( 'css' === $default_editor ) ? 'active' : '' ) . '">' . esc_html__( 'CSS', 'plugin-slug' ) . '</li>';
 						echo '</ul>';
 					}
 
