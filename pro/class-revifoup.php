@@ -57,7 +57,7 @@ final class REVIFOUP {
 
 		// Assign template override.
 		$this->templates = \StoboKit\Template_Factory::get_instance(
-			'plugin-slug',
+			'review-follow-up-for-wooCommerce',
 			REVIFOUP_PLUGIN_FILE
 		);
 
