@@ -67,6 +67,9 @@ final class REVIFOUP {
 		// Logger.
 		$this->logger = new \StoboKit\Logger();
 
+		// Cron scheduler.
+		$this->cron = new \StoboKit\Cron_Scheduler();
+
 		// Schedule logger.
 		$this->scheduler = new \StoboKit\Schedule_Logger();
 
