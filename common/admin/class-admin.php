@@ -139,7 +139,8 @@ The {site_name} Team"
 			array(
 				'email' => $email,
 				'order' => $order,
-			)
+			),
+			'review_followup'
 		);
 	}
 
