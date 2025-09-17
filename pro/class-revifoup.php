@@ -89,6 +89,7 @@ final class REVIFOUP {
 	 */
 	private function load_common() {
 		require_once REVIFOUP_PATH . '/common/public/class-frontend.php';
+		require_once plugin_dir_path( __FILE__ ) . '/class-cron.php';
 
 		if ( is_admin() ) {
 			include_once REVIFOUP_PATH . '/common/admin/view/settings-page.php';
@@ -105,8 +106,9 @@ final class REVIFOUP {
 	private function load_dependencies() {
 		$this->load_common();
 
-		require_once __DIR__ . '/class-admin.php';
-		require_once __DIR__ . '/views/email-templates.php';
+		require_once plugin_dir_path( __FILE__ ) . '/views/email-templates.php';
+		require_once plugin_dir_path( __FILE__ ) . '/class-admin.php';
+		require_once plugin_dir_path( __FILE__ ) . '/class-hooks.php';
 	}
 
 	/**

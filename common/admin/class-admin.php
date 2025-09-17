@@ -97,13 +97,14 @@ class Admin {
 	public function send_review_request_email( $email, $order ) {
 		$schedule_days = (int) get_option( 'revifoup_sent_email_days', 3 );
 
-		$subject     = get_option( 'revifoup_review_request_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'plugin-slug' ) );
-		$heading     = get_option( 'revifoup_review_request_email_heading', esc_html__( 'Quick favor? We\'d love your feedback!', 'plugin-slug' ) );
-		$footer_text = get_option( 'revifoup_review_request_email_footer_text', esc_html__( 'Thanks again for choosing us!', 'plugin-slug' ) );
+		$subject     = get_option( 'revifoup_review_request_order_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'plugin-slug' ) );
+		$heading     = get_option( 'revifoup_review_request_order_email_heading', esc_html__( 'Quick favor? We\'d love your feedback!', 'plugin-slug' ) );
+		$footer_text = get_option( 'revifoup_review_request_order_email_footer_text', esc_html__( 'Thanks again for choosing us!', 'plugin-slug' ) );
 
 		$content = get_option(
-			'revifoup_review_request_email_content',
-			"Hi{customer_name},
+			'revifoup_review_request_order_email_content',
+			array(
+				'html' => "Hi{customer_name},
 
 Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases
 
@@ -116,7 +117,8 @@ Here's what you ordered:
 It only takes a minute, and it means a lot to our small team.
 
 Warmly,
-The {site_name} Team"
+The {site_name} Team",
+			)
 		);
 
 		$content = revifoup()->templates->get_template(
@@ -140,7 +142,7 @@ The {site_name} Team"
 				'email' => $email,
 				'order' => $order,
 			),
-			'review_followup'
+			'review_followup',
 		);
 	}
 
