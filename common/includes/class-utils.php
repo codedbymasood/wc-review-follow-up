@@ -9,6 +9,8 @@
 
 namespace REVIFOUP;
 
+use STOBOKIT\Utils as Core_Utils;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,48 +19,95 @@ defined( 'ABSPATH' ) || exit;
 class Utils {
 
 	/**
-	 * Convert string cases
+	 * Generate coupons.
 	 *
-	 * @param string $string String.
-	 * @param string $to_case Change text case.
 	 * @return string
 	 */
-	public static function convert_case( $string, $to_case = 'kebab' ) {
-		// Normalize the string: replace dashes and underscores with spaces.
-		$string = preg_replace( '/[_\-]+/', ' ', $string );
-		$string = strtolower( $string );
+	public static function generate_coupon( $args = array() ) {
+		$code = Core_Utils::generate_random_string();
 
-		$words = explode( ' ', $string );
+		$discount_type       = isset( $args['discount_type'] ) ? $args['discount_type'] : 'percent';
+		$amount              = isset( $args['amount'] ) ? $args['amount'] : 20;
+		$coupon_expires_date = isset( $args['coupon_expires_date'] ) ? $args['coupon_expires_date'] : '';
 
-		switch ( $to_case ) {
-			case 'snake':
-				return implode( '_', $words );
-			case 'kebab':
-				return implode( '-', $words );
-			case 'camel':
-				return lcfirst( str_replace( ' ', '', ucwords( implode( ' ', $words ) ) ) );
-			case 'pascal':
-				return str_replace( ' ', '', ucwords( implode( ' ', $words ) ) );
-			case 'title':
-				return ucwords( implode( ' ', $words ) );
-			default:
-				return $string;
-		}
+		$coupon = new \WC_Coupon();
+
+		$coupon->set_code( $code );
+		$coupon->set_discount_type( $discount_type );
+		$coupon->set_amount( $amount );
+		$coupon->set_date_expires( $coupon_expires_date );
+		$coupon->set_usage_limit_per_user( 1 );
+
+		$coupon->save();
+
+		return $code;
 	}
 
-	/**
-	 * Generate random string.
-	 *
-	 * @param integer $length Length.
-	 * @return string
-	 */
-	public static function generate_random_string( $length = 8 ) {
-		$random_string = '';
-		$characters    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	public static function update_status( $args = array(), $status = '' ) {
 
-		for ( $i = 0; $i < $length; $i++ ) {
-			$random_string .= $characters[ random_int( 0, strlen( $characters ) - 1 ) ];
+		$order_id = isset( $args['order_id'] ) ? $args['order_id'] : 0;
+		$email    = isset( $args['email'] ) ? $args['email'] : '';
+
+		if ( ! $order_id || ! $email ) {
+			revifoup()->logger->info(
+				'Order ID or Email are not found.',
+				array(
+					'order_id' => $order_id,
+					'email'    => $email,
+				)
+			);
+
+			return;
 		}
-		return $random_string;
+
+		global $wpdb;
+
+		$table = $wpdb->prefix . 'revifoup_review_requests';
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$exists = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM $table WHERE order_id = %d AND email = %s",
+				$order_id,
+				$email
+			)
+		);
+
+		if ( ! $exists ) {
+			revifoup()->logger->warning(
+				'Review request log not found.',
+				array(
+					'order_id' => $order_id,
+					'email'    => $email,
+				)
+			);
+
+			return;
+		}
+
+		$result = $wpdb->update(
+			$table,
+			array(
+				'status' => $status,
+			),
+			array(
+				'order_id' => $order_id,
+				'email'    => $email,
+			),
+			array( '%s' ),
+			array( '%d', '%s' )
+		);
+
+		if ( false === $result ) {
+			revifoup()->logger->warning(
+				'Can\'t update review request log.',
+				array(
+					'order_id' => $order_id,
+					'email'    => $email,
+				)
+			);
+		}
 	}
 }

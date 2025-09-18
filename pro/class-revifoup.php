@@ -88,6 +88,7 @@ final class REVIFOUP {
 	 * Load required files.
 	 */
 	private function load_common() {
+		require_once REVIFOUP_PATH . '/common/includes/class-utils.php';
 		require_once REVIFOUP_PATH . '/common/public/class-frontend.php';
 		require_once plugin_dir_path( __FILE__ ) . '/class-cron.php';
 
@@ -107,6 +108,7 @@ final class REVIFOUP {
 		$this->load_common();
 
 		require_once plugin_dir_path( __FILE__ ) . '/views/email-templates.php';
+		require_once plugin_dir_path( __FILE__ ) . '/class-cron.php';
 		require_once plugin_dir_path( __FILE__ ) . '/class-admin.php';
 		require_once plugin_dir_path( __FILE__ ) . '/class-hooks.php';
 	}
@@ -190,7 +192,7 @@ final class REVIFOUP {
 			order_id     BIGINT UNSIGNED NOT NULL,
 			customer_id  BIGINT UNSIGNED NOT NULL,
 			email        VARCHAR(50)     NOT NULL, 
-			status       VARCHAR(50)     NOT NULL DEFAULT 'pending',  /* queued | sent | failed */
+			status       VARCHAR(50)     NOT NULL DEFAULT 'pending',
 			sent_at      DATETIME        NULL,
 			created_at   DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),

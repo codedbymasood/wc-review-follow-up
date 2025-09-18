@@ -14,23 +14,6 @@ defined( 'ABSPATH' ) || exit;
 add_action(
 	'init',
 	function () {
-		$default_html = "<p>Hi [customer_name],</p>
-
-<p>Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases.</p>
-
-<p>We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.</p>
-
-<strong>Here's what you ordered:</strong>
-
-[items]
-
-<p>It only takes a minute, and it means a lot to our small team.</p>
-
-<p>Thanks again for choosing us!</p>
-
-<p>Warmly,</p>
-<p>The [site_name] Team</p>";
-
 		$fields = array(
 			esc_html__( 'Mail Settings', 'plugin-slug' ) => array(
 				array(
@@ -87,7 +70,7 @@ add_action(
 				),
 				array(
 					'id'      => 'revifoup_followup_days',
-					'label'   => esc_html__( 'First Followup Days', 'plugin-slug' ),
+					'label'   => esc_html__( 'Followup Days', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 2,
 					'pro'     => true,
@@ -97,6 +80,13 @@ add_action(
 					'label'   => esc_html__( 'Enable Discount', 'plugin-slug' ),
 					'type'    => 'checkbox',
 					'default' => '0',
+					'pro'     => true,
+				),
+				array(
+					'id'      => 'revifoup_reward_period_days',
+					'label'   => esc_html__( 'Reward Period Days', 'plugin-slug' ),
+					'type'    => 'number',
+					'default' => 7,
 					'pro'     => true,
 				),
 				array(
@@ -119,6 +109,13 @@ add_action(
 				array(
 					'id'      => 'revifoup_coupon_expires_in',
 					'label'   => esc_html__( 'Coupon Expires In', 'plugin-slug' ),
+					'type'    => 'number',
+					'default' => 30,
+					'pro'     => true,
+				),
+				array(
+					'id'      => 'revifoup_allowed_coupon_limit',
+					'label'   => esc_html__( 'Allowed Coupon Limits Per Year', 'plugin-slug' ),
 					'type'    => 'number',
 					'default' => 3,
 					'pro'     => true,

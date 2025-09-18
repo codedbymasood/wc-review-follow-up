@@ -41,6 +41,7 @@ class Frontend {
 	private function __construct() {
 		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
 		add_filter( 'wp_mail_from_name', array( $this, 'mail_from_name' ) );
+		add_action( 'stobokit_emailer_review_request', array( $this, 'request_email_sent' ), 10, 2 );
 	}
 
 	public function mail_from() {
@@ -55,6 +56,14 @@ class Frontend {
 		$from_name = $from_name ? $from_name : get_option( 'blogname', '' );
 
 		return $from_name;
+	}
+
+	public function request_email_sent( $args = array(), $sent = 0 ) {
+		if ( $sent ) {
+			Utils::update_status( $args, 'request-sent' );
+		} else {
+			Utils::update_status( $args, 'request-failed' );
+		}
 	}
 }
 

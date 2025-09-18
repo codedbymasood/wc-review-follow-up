@@ -56,6 +56,11 @@ class Admin {
 		if ( empty( $exceed_order_amount ) || $order_total >= $exceed_order_amount ) {
 			$this->save_data_in_table( $email, $order );
 			$this->send_review_request_email( $email, $order );
+
+			/**
+			 * After restock alert email sent.
+			 */
+			do_action( 'revifoup_review_request_sent', $email, $order );
 		}
 	}
 
@@ -82,7 +87,7 @@ class Admin {
 					array(
 						'email'    => $email,
 						'order_id' => $order_id,
-						'status'   => 'queued',
+						'status'   => 'scheduled',
 					),
 					array( '%s', '%d', '%s' )
 				);
@@ -95,6 +100,8 @@ class Admin {
 	}
 
 	public function send_review_request_email( $email, $order ) {
+		$order_id = $order->get_ID();
+
 		$schedule_days = (int) get_option( 'revifoup_sent_email_days', 3 );
 
 		$subject     = get_option( 'revifoup_review_request_order_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'plugin-slug' ) );
@@ -139,10 +146,10 @@ The {site_name} Team",
 			$html,
 			$schedule_days,
 			array(
-				'email' => $email,
-				'order' => $order,
+				'email'    => $email,
+				'order_id' => $order_id,
 			),
-			'review_followup',
+			'review_request',
 		);
 	}
 
