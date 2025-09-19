@@ -48,20 +48,15 @@ class Admin {
 	public function order_completed( $order_id = 0 ) {
 		$order = wc_get_order( $order_id );
 
-		$order_total = (float) $order->get_total();
-		$email       = $order->get_billing_email();
+		$email = $order->get_billing_email();
 
-		$exceed_order_amount = (int) get_option( 'revifoup_exceed_order_amount', '' );
+		$this->save_data_in_table( $email, $order );
+		$this->send_review_request_email( $email, $order );
 
-		if ( empty( $exceed_order_amount ) || $order_total >= $exceed_order_amount ) {
-			$this->save_data_in_table( $email, $order );
-			$this->send_review_request_email( $email, $order );
-
-			/**
-			 * After restock alert email sent.
-			 */
-			do_action( 'revifoup_review_request_sent', $email, $order );
-		}
+		/**
+		 * After restock alert email sent.
+		 */
+		do_action( 'revifoup_review_request_sent', $email, $order );
 	}
 
 	public function save_data_in_table( $email, $order ) {
@@ -102,23 +97,28 @@ class Admin {
 	public function send_review_request_email( $email, $order ) {
 		$order_id = $order->get_ID();
 
+		$request_type  = get_option( 'revifoup_request_type', 'by_order' );
 		$schedule_days = (int) get_option( 'revifoup_sent_email_days', 3 );
 
-		$subject     = get_option( 'revifoup_review_request_order_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'plugin-slug' ) );
-		$heading     = get_option( 'revifoup_review_request_order_email_heading', esc_html__( 'Quick favor? We\'d love your feedback!', 'plugin-slug' ) );
-		$footer_text = get_option( 'revifoup_review_request_order_email_footer_text', esc_html__( 'Thanks again for choosing us!', 'plugin-slug' ) );
+		$subject     = get_option( 'revifoup_review_request_email_subject', esc_html__( 'How was your order? We\'d love your feedback.', 'plugin-slug' ) );
+		$heading     = get_option( 'revifoup_review_request_email_heading', esc_html__( 'Quick favor? We\'d love your feedback!', 'plugin-slug' ) );
+		$footer_text = get_option( 'revifoup_review_request_email_footer_text', esc_html__( 'Thanks again for choosing us!', 'plugin-slug' ) );
 
 		$content = get_option(
-			'revifoup_review_request_order_email_content',
+			'revifoup_review_request_email_content',
 			array(
 				'html' => "Hi{customer_name},
 
-Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases
-
+Thanks again for your recent order! We hope everything arrived in perfect shape and that you're loving your new purchases.
+{% is_order_request_type %}
 We'd really appreciate it if you could take a moment to review the products you received, your feedback helps us improve and also helps other customers shop with confidence.
+{%}
+{% is_product_request_type %}
+We'd especially love to hear your thoughts on the {high_value_product_name} and any other items you received. Your feedback helps us improve and also helps other customers shop with confidence.
 
+{product_info}
+{%}
 Here's what you ordered:
-
 {ordered_items}
 
 It only takes a minute, and it means a lot to our small team.
@@ -146,8 +146,10 @@ The {site_name} Team",
 			$html,
 			$schedule_days,
 			array(
-				'email'    => $email,
-				'order_id' => $order_id,
+				'email'                   => $email,
+				'order_id'                => $order_id,
+				'is_product_request_type' => ( 'by_product' === $request_type ),
+				'is_order_request_type'   => ( 'by_order' === $request_type ),
 			),
 			'review_request',
 		);

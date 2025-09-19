@@ -17,6 +17,6 @@ defined( 'ABSPATH' ) || exit;
 class Cron_Pro {
 
 	public static function set_reward_unsubscribe( $args = array(), $order_id = 0 ) {
-		Utils::update_status( $args, 'unsubsribed' );
+		Utils::update_status( $args, 'unsubscribed' );
 	}
 }

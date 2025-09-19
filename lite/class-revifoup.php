@@ -89,6 +89,7 @@ final class REVIFOUP {
 	 */
 	private function load_common() {
 		require_once REVIFOUP_PATH . '/common/includes/class-utils.php';
+		require_once REVIFOUP_PATH . '/common/includes/class-hooks.php';
 		require_once REVIFOUP_PATH . '/common/public/class-frontend.php';
 
 		if ( is_admin() ) {

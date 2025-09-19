@@ -14,6 +14,24 @@ defined( 'ABSPATH' ) || exit;
 add_action(
 	'init',
 	function () {
+
+		$categories = array();
+
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => false,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			)
+		);
+
+		if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+			foreach ( $terms as $term ) {
+				$categories[ $term->term_id ] = $term->name;
+			}
+		}
+
 		$fields = array(
 			esc_html__( 'Mail Settings', 'plugin-slug' ) => array(
 				array(
@@ -47,17 +65,16 @@ add_action(
 					'label'   => esc_html__( 'Request Type', 'plugin-slug' ),
 					'type'    => 'select',
 					'options' => array(
-						'percent'    => esc_html__( 'By Order', 'plugin-slug' ),
-						'fixed_cart' => esc_html__( 'By Product', 'plugin-slug' ),
+						'by_order'   => esc_html__( 'By Order', 'plugin-slug' ),
+						'by_product' => esc_html__( 'By Product', 'plugin-slug' ),
 					),
 					'pro'     => true,
 				),
 				array(
 					'id'      => 'revifoup_exclude_categories',
 					'label'   => esc_html__( 'Exclude Product Categories', 'plugin-slug' ),
-					'type'    => 'select',
-					'options' => array(),
-					'pro'     => true,
+					'type'    => 'multiselect',
+					'options' => $categories,
 				),
 			),
 			esc_html__( 'Followup Email Settings', 'plugin-slug' ) => array(
