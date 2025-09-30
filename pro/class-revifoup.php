@@ -17,11 +17,32 @@ defined( 'ABSPATH' ) || exit;
 final class REVIFOUP {
 
 	/**
+	 * Emailer class
+	 *
+	 * @var \StoboKit\Emailer
+	 */
+	public $emailer;
+
+	/**
 	 * Logger class
 	 *
 	 * @var \StoboKit\Logger
 	 */
 	public $logger;
+
+	/**
+	 * Cron class
+	 *
+	 * @var \StoboKit\Cron_Scheduler
+	 */
+	public $cron;
+
+	/**
+	 * Schedule logger class
+	 *
+	 * @var \StoboKit\Schedule_Logger
+	 */
+	public $scheduler;
 
 	/**
 	 * Template override class.
@@ -75,6 +96,8 @@ final class REVIFOUP {
 
 		$this->load_dependencies();
 		$this->init_hooks();
+
+		do_action( 'revifoup_initialized' );
 	}
 
 	/**

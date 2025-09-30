@@ -1,6 +1,7 @@
 <?php
 $version = '1.0.0';
 
+$entry_file  = 'review-follow-up-pro-for-wooCommerce';
 $plugin_slug = 'review-follow-up-for-wooCommerce';
 $plugin_name = 'Review Follow Up for WooCommerce';
 
@@ -55,69 +56,77 @@ $plugin_header = '<?php
 
 defined( \'ABSPATH\' ) || exit;
 
-if ( ! defined( \'REVIFOUP_PLUGIN_FILE\' ) ) {
-  define( \'REVIFOUP_PLUGIN_FILE\', __FILE__ );
-}
+if ( did_action( \'revifoup_initialized\' ) ) {
+	deactivate_plugins( \'review-follow-up-for-wooCommerce/review-follow-up-for-wooCommerce.php\' );
+	register_activation_hook( __FILE__, \'revifoup_on_plugin_activation\' );
+	return;
+} else {
+	if ( ! defined( \'REVIFOUP_PLUGIN_FILE\' ) ) {
+		define( \'REVIFOUP_PLUGIN_FILE\', __FILE__ );
+	}
 
-if ( ! defined( \'REVIFOUP_VERSION\' ) ) {
-  define( \'REVIFOUP_VERSION\', \'' . $version . '\' );
-}
+	if ( ! defined( \'REVIFOUP_VERSION\' ) ) {
+		define( \'REVIFOUP_VERSION\', \'' . $version . '\' );
+	}
 
-if ( ! defined( \'REVIFOUP_PATH\' ) ) {
-	define( \'REVIFOUP_PATH\', plugin_dir_path( __FILE__ ) );
-}
+	if ( ! defined( \'REVIFOUP_PATH\' ) ) {
+		define( \'REVIFOUP_PATH\', plugin_dir_path( __FILE__ ) );
+	}
 
-if ( ! defined( \'REVIFOUP_URL\' ) ) {
-	define( \'REVIFOUP_URL\', plugin_dir_url( __FILE__ ) );
-}
+	if ( ! defined( \'REVIFOUP_URL\' ) ) {
+		define( \'REVIFOUP_URL\', plugin_dir_url( __FILE__ ) );
+	}
 
-require_once __DIR__ . \'/includes/class-revifoup.php\';
+	if ( ! class_exists( \'\\REVIFOUP\\REVIFOUP\' ) ) {
+		require_once __DIR__ . \'/includes/class-revifoup.php\';
 
-/**
- * Returns the main instance of REVIFOUP.
- *
- * @since  1.0
- * @return REVIFOUP
- */
-function revifoup() {
-	return \REVIFOUP\REVIFOUP::instance();
-}
+		/**
+		 * Returns the main instance of REVIFOUP.
+		 *
+		 * @since  1.0
+		 * @return REVIFOUP
+		 */
+		function revifoup() {
+			return \REVIFOUP\REVIFOUP::instance();
+		}
 
-// Global for backwards compatibility.
-$GLOBALS[\'revifoup\'] = revifoup();
+		// Global for backwards compatibility.
+		$GLOBALS[\'revifoup\'] = revifoup();
 
-/**
- * ==========================
- *  Onborading
- * ==========================
- */
+		/**
+		 * ==========================
+		 *  Onborading
+		 * ==========================
+		 */
 
-// Include the onboarding class.
-if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
-	include_once dirname( REVIFOUP_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
-}
+		// Include the onboarding class.
+		if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
+			include_once dirname( REVIFOUP_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
+		}
 
-register_activation_hook( __FILE__, \'revifoup_on_plugin_activation\' );
+		register_activation_hook( __FILE__, \'revifoup_on_plugin_activation\' );
 
-/**
- * Handle plugin activation.
- */
-function revifoup_on_plugin_activation() {
-	// Set flag that plugin was just activated.
-	set_transient( \'revifoup_onboarding_activation_redirect\', true, 60 );
+		/**
+		 * Handle plugin activation.
+		 */
+		function revifoup_on_plugin_activation() {
+			// Set flag that plugin was just activated.
+			set_transient( \'revifoup_onboarding_activation_redirect\', true, 60 );
 
-	// Set onboarding as pending.
-	update_option( \'revifoup_onboarding_completed\', false );
-	update_option( \'revifoup_onboarding_started\', current_time( \'timestamp\' ) );
+			// Set onboarding as pending.
+			update_option( \'revifoup_onboarding_completed\', false );
+			update_option( \'revifoup_onboarding_started\', current_time( \'timestamp\' ) );
 
-	// Clear any existing onboarding progress.
-	delete_option( \'revifoup_onboarding_current_step\' );
+			// Clear any existing onboarding progress.
+			delete_option( \'revifoup_onboarding_current_step\' );
+		}
+	}
 }
 ';
 
-file_put_contents( $build_dir . '/plugin-slug.php', $plugin_header );
+file_put_contents( $build_dir . '/' . $entry_file . '.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/' . $plugin_slug . '-pro-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/' . $entry_file . '-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Pro version built: ' . $zip_file . "\n";

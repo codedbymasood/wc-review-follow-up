@@ -89,69 +89,74 @@ $plugin_header = '<?php
 
 defined( \'ABSPATH\' ) || exit;
 
-if ( ! defined( \'REVIFOUP_PLUGIN_FILE\' ) ) {
-	define( \'REVIFOUP_PLUGIN_FILE\', __FILE__ );
-}
+if ( ! did_action( \'revifoup_initialized\' ) ) {
 
-if ( ! defined( \'REVIFOUP_VERSION\' ) ) {
-	define( \'REVIFOUP_VERSION\', \'' . $version . '\' );
-}
+	if ( ! defined( \'REVIFOUP_PLUGIN_FILE\' ) ) {
+		define( \'REVIFOUP_PLUGIN_FILE\', __FILE__ );
+	}
 
-if ( ! defined( \'REVIFOUP_PATH\' ) ) {
-	define( \'REVIFOUP_PATH\', plugin_dir_path( __FILE__ ) );
-}
+	if ( ! defined( \'REVIFOUP_VERSION\' ) ) {
+		define( \'REVIFOUP_VERSION\', \'' . $version . '\' );
+	}
 
-if ( ! defined( \'REVIFOUP_URL\' ) ) {
-	define( \'REVIFOUP_URL\', plugin_dir_url( __FILE__ ) );
-}
+	if ( ! defined( \'REVIFOUP_PATH\' ) ) {
+		define( \'REVIFOUP_PATH\', plugin_dir_path( __FILE__ ) );
+	}
 
-require_once __DIR__ . \'/includes/class-revifoup.php\';
+	if ( ! defined( \'REVIFOUP_URL\' ) ) {
+		define( \'REVIFOUP_URL\', plugin_dir_url( __FILE__ ) );
+	}
 
-/**
- * Returns the main instance of REVIFOUP.
- *
- * @since  1.0
- * @return REVIFOUP
- */
-function revifoup() {
-	return \\REVIFOUP\\REVIFOUP::instance();
-}
+	if ( ! class_exists( \'\\REVIFOUP\\REVIFOUP\' ) ) {
+		require_once __DIR__ . \'/includes/class-revifoup.php\';
 
-// Global for backwards compatibility.
-$GLOBALS[\'revifoup\'] = revifoup();
+		/**
+		 * Returns the main instance of REVIFOUP.
+		 *
+		 * @since  1.0
+		 * @return REVIFOUP
+		 */
+		function revifoup() {
+			return \\REVIFOUP\\REVIFOUP::instance();
+		}
 
-/**
- * ==========================
- *  Onborading
- * ==========================
- */
+		// Global for backwards compatibility.
+		$GLOBALS[\'revifoup\'] = revifoup();
 
-// Include the onboarding class.
-if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
-	include_once dirname( REVIFOUP_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
-}
+		/**
+		 * ==========================
+		 *  Onborading
+		 * ==========================
+		 */
 
-register_activation_hook( __FILE__, \'revifoup_on_plugin_activation\' );
+		// Include the onboarding class.
+		if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
+			include_once dirname( REVIFOUP_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
+		}
 
-/**
- * Handle plugin activation.
- */
-function revifoup_on_plugin_activation() {
-	// Set flag that plugin was just activated.
-	set_transient( \'revifoup_onboarding_activation_redirect\', true, 60 );
+		register_activation_hook( __FILE__, \'revifoup_on_plugin_activation\' );
 
-	// Set onboarding as pending.
-	update_option( \'revifoup_onboarding_completed\', false );
-	update_option( \'revifoup_onboarding_started\', current_time( \'timestamp\' ) );
+		/**
+		 * Handle plugin activation.
+		 */
+		function revifoup_on_plugin_activation() {
+			// Set flag that plugin was just activated.
+			set_transient( \'revifoup_onboarding_activation_redirect\', true, 60 );
 
-	// Clear any existing onboarding progress.
-	delete_option( \'revifoup_onboarding_current_step\' );
+			// Set onboarding as pending.
+			update_option( \'revifoup_onboarding_completed\', false );
+			update_option( \'revifoup_onboarding_started\', current_time( \'timestamp\' ) );
+
+			// Clear any existing onboarding progress.
+			delete_option( \'revifoup_onboarding_current_step\' );
+		}
+	}
 }
 ';
 
 file_put_contents( $build_dir . '/' . $plugin_slug . '.php', $plugin_header );
 
-$zip_file = $source_dir . '/builds/' . $plugin_slug . '-lite-' . $version . '.zip';
+$zip_file = $source_dir . '/builds/' . $plugin_slug . '-' . $version . '.zip';
 create_zip_archive( $build_dir, $zip_file );
 
 echo 'Lite version built: ' . $zip_file . "\n";
