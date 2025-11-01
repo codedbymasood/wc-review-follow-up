@@ -114,15 +114,15 @@ final class REVIFOUP {
 		require_once REVIFOUP_PATH . '/common/includes/class-utils.php';
 		require_once REVIFOUP_PATH . '/common/includes/class-hooks.php';
 		require_once REVIFOUP_PATH . '/common/public/class-frontend.php';
-		require_once plugin_dir_path( __FILE__ ) . '/class-cron.php';
+		require_once REVIFOUP_PATH . '/common/includes/class-cron.php';
 
 		if ( is_admin() ) {
+			require_once REVIFOUP_PATH . '/common/admin/view/email-templates.php';
 			include_once REVIFOUP_PATH . '/common/admin/view/settings-page.php';
+
 			require_once REVIFOUP_PATH . '/common/admin/class-admin.php';
 			require_once REVIFOUP_PATH . '/common/admin/class-review-request-list-table.php';
 		}
-
-		require REVIFOUP_PATH . '/common/admin/init-update.php';
 	}
 
 	/**
@@ -131,10 +131,7 @@ final class REVIFOUP {
 	private function load_dependencies() {
 		$this->load_common();
 
-		require_once plugin_dir_path( __FILE__ ) . '/views/email-templates.php';
-		require_once plugin_dir_path( __FILE__ ) . '/class-cron.php';
-		require_once plugin_dir_path( __FILE__ ) . '/class-admin.php';
-		require_once plugin_dir_path( __FILE__ ) . '/class-hooks.php';
+		require REVIFOUP_PATH . '/common/admin/init-update.php';
 	}
 
 	/**
@@ -142,10 +139,6 @@ final class REVIFOUP {
 	 */
 	private function init_hooks() {
 		add_action( 'plugins_loaded', array( $this, 'init_onboarding' ) );
-		add_action( 'plugins_loaded', array( $this, 'ensure_table_exists' ) );
-
-		// Create a table when activate the plugin.
-		register_activation_hook( REVIFOUP_PLUGIN_FILE, array( $this, 'create_email_logs_table' ) );
 		add_action( 'before_woocommerce_init', array( $this, 'enable_hpos' ) );
 	}
 
@@ -172,60 +165,6 @@ final class REVIFOUP {
 				'option_prefix' => 'revifoup_onboarding',
 			)
 		);
-	}
-
-	/**
-	 * Make sure the table exists, otherwise create the required table.
-	 *
-	 * @return void
-	 */
-	public function ensure_table_exists() {
-		global $wpdb;
-
-		$table = $wpdb->prefix . 'revifoup_review_requests';
-
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching
-		$table_exists = $wpdb->get_var(
-			$wpdb->prepare(
-				'SHOW TABLES LIKE %s',
-				$table
-			)
-		);
-
-		if ( $table_exists !== $table ) {
-			$this->maybe_create_table();
-		}
-	}
-
-	/**
-	 * Create a table.
-	 *
-	 * @return void
-	 */
-	public function maybe_create_table() {
-
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'revifoup_review_requests';
-
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE $table_name (
-			id           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-			order_id     BIGINT UNSIGNED NOT NULL,
-			customer_id  BIGINT UNSIGNED NOT NULL,
-			email        VARCHAR(50)     NOT NULL, 
-			status       VARCHAR(50)     NOT NULL DEFAULT 'pending',
-			sent_at      DATETIME        NULL,
-			created_at   DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY  (id),
-			KEY order_id (order_id),
-			KEY sent_at  (sent_at)
-		) $charset_collate;";
-
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <?php
 $version = '1.0.0';
 
-$entry_file  = 'review-follow-up-pro-for-wooCommerce';
+$entry_file  = 'review-follow-up-pro-for-woocommerce';
 $plugin_slug = 'review-follow-up-for-wooCommerce';
 $plugin_name = 'Review Follow Up for WooCommerce';
 
@@ -27,6 +27,7 @@ copy_directory( $source_dir . '/templates/pro', $build_dir . '/templates' );
 copy_directory( $source_dir . '/languages', $build_dir . '/languages' );
 copy( $source_dir . '/CHANGELOG-PRO.md', $build_dir . '/CHANGELOG.md' );
 copy( $source_dir . '/readme-pro.txt', $build_dir . '/readme.txt' );
+copy( $source_dir . '/install.php', $build_dir . '/install.php' );
 
 $replacements = array(
 	'plugin-slug' => $plugin_slug,
@@ -49,7 +50,7 @@ $plugin_header = '<?php
  * Requires at least: 6.6
  * Requires PHP: 7.4
  * WC requires at least: 6.0
- * WC tested up to: 9.6
+ * WC tested up to: 10.3.0
  *
  * @package ' . $plugin_slug . '
  */
@@ -91,35 +92,11 @@ if ( did_action( \'revifoup_initialized\' ) ) {
 		}
 
 		// Global for backwards compatibility.
-		$GLOBALS[\'revifoup\'] = revifoup();
+		$GLOBALS[\'revifoup\'] = revifoup();		
 
-		/**
-		 * ==========================
-		 *  Onborading
-		 * ==========================
-		 */
+		require_once dirname( REVIFOUP_PLUGIN_FILE ) . \'/install.php\';
 
-		// Include the onboarding class.
-		if ( ! class_exists( \'\\STOBOKIT\\Onboarding\' ) ) {
-			include_once dirname( REVIFOUP_PLUGIN_FILE ) . \'/core/class-onboarding.php\';
-		}
-
-		register_activation_hook( __FILE__, \'revifoup_on_plugin_activation\' );
-
-		/**
-		 * Handle plugin activation.
-		 */
-		function revifoup_on_plugin_activation() {
-			// Set flag that plugin was just activated.
-			set_transient( \'revifoup_onboarding_activation_redirect\', true, 60 );
-
-			// Set onboarding as pending.
-			update_option( \'revifoup_onboarding_completed\', false );
-			update_option( \'revifoup_onboarding_started\', current_time( \'timestamp\' ) );
-
-			// Clear any existing onboarding progress.
-			delete_option( \'revifoup_onboarding_current_step\' );
-		}
+		register_activation_hook( REVIFOUP_PLUGIN_FILE, array( \'REVIFOUP\\Install\', \'init\' ) );
 	}
 }
 ';

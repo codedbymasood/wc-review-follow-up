@@ -115,34 +115,9 @@ function revifoup_development_init() {
  */
 add_action( 'plugins_loaded', 'revifoup_development_init', 0 );
 
+require_once dirname( REVIFOUP_PLUGIN_FILE ) . '/install.php';
 
-/**
- * ==========================
- *  Onborading
- * ==========================
- */
-
-// Include the onboarding class.
-if ( ! class_exists( '\STOBOKIT\Onboarding' ) ) {
-	include_once dirname( REVIFOUP_PLUGIN_FILE ) . '/core/class-onboarding.php';
-}
-
-register_activation_hook( __FILE__, 'revifoup_on_plugin_activation' );
-
-/**
- * Handle plugin activation.
- */
-function revifoup_on_plugin_activation() {
-	// Set flag that plugin was just activated.
-	set_transient( 'revifoup_onboarding_activation_redirect', true, 60 );
-
-	// Set onboarding as pending.
-	update_option( 'revifoup_onboarding_completed', false );
-	update_option( 'revifoup_onboarding_started', current_time( 'timestamp' ) );
-
-	// Clear any existing onboarding progress.
-	delete_option( 'revifoup_onboarding_current_step' );
-}
+register_activation_hook( __FILE__, array( 'REVIFOUP\Install', 'init' ) );
 
 /**
  * Add development tools to admin bar

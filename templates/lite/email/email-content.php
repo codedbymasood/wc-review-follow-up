@@ -13,7 +13,7 @@ $heading     = isset( $args['heading'] ) ? $args['heading'] : '';
 $content     = isset( $args['content'] ) ? $args['content'] : '';
 $footer_text = isset( $args['footer_text'] ) ? $args['footer_text'] : '';
 
-restaler()->templates->include_template(
+revifoup()->templates->include_template(
 	'email/email-header.php',
 	array(
 		'heading' => $heading,
@@ -22,7 +22,7 @@ restaler()->templates->include_template(
 
 echo wp_kses_post( wpautop( $content ) );
 
-restaler()->templates->include_template(
+revifoup()->templates->include_template(
 	'email/email-footer.php',
 	array(
 		'footer_text' => $footer_text,

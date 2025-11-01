@@ -1,58 +1,141 @@
-# Review Follow Up for WooCommerce
+# Review Follow-Up for WooCommerce
 
-A lightweight WooCommerce addon that allows customers to subscribe for notifications when an out-of-stock product is restocked. Includes intelligent follow-up emails and include dynamic discount codes to recover more sales.
+**Tags:** woocommerce, reviews, email automation, social proof, customer feedback  
+**Requires at least:** 6.6  
+**Tested up to:** 6.8  
+**Requires PHP:** 7.4  
+**Stable tag:** 1.0.0  
+**License:** GPL-3.0+  
+**License URI:** https://www.gnu.org/licenses/gpl-3.0.txt
 
----
+Automate review requests with smart timing, follow-ups, and coupon incentives. Build social proof and drive repeat sales.
 
-## Features
+## Description
 
-- Show **"Notify Me"** button on out-of-stock product pages
-- Store user email and product info in a custom table
-- Send **automatic email** when the product is back in stock
-- **Track purchases** to prevent unnecessary emails
-- Send **follow-up emails** (2 days later) only if the product wasn’t purchased
-- Generate **unique, time-limited coupon codes** for follow-up
+### Why Choose Review Follow-Up?
 
----
+**Build Social Proof** – Generate authentic reviews systematically instead of hoping customers remember to leave feedback on their own.
 
-## Use Case
+**Increase Conversion Rates** – Display real customer experiences that convince hesitant shoppers to complete their purchases.
 
-1. Customer visits an out-of-stock product and subscribes.
-2. When stock is updated, the plugin sends an email.
-3. If the customer hasn’t purchased within 2 days, a follow-up email with a discount coupon is sent.
-4. After purchase, the customer status changed to completed to prevent unnecessary follow-up.
+**Reward & Motivate** – Offer exclusive discount codes to reviewers, turning feedback into repeat business opportunities.
 
----
+**Smart Targeting** – Send requests only to qualified customers after minimum purchase amounts and optimal timing delays.
+
+### How It Works
+
+1. **Customer completes purchase** – Order is tracked automatically by the plugin
+2. **Smart delay trigger** – Review request is scheduled after your configured waiting period
+3. **Personalized email sent** – Customer receives a branded review request at the perfect moment
+4. **Follow-up reminders** – Non-respondents get additional nudges at customizable intervals
+5. **Review approved** – Once admin approves the review, verified purchaser receives exclusive discount code
+
+### Features
+
+- **Automated review requests** – Send requests after customizable delays (X days post-purchase)
+- **Strategic follow-up sequences** – Multiple automated reminder emails to non-respondents
+- **Verified purchaser rewards** – Discount codes sent only after reviews are approved to prevent spam
+- **Reward limits** – Set maximum number of rewards per user per year to control costs
+- **Product-level targeting** – Request reviews for individual items or all purchased products in one email
+- **Order-level requests** – Send streamlined review requests covering entire orders
+- **Minimum order filters** – Only request reviews from customers exceeding specified purchase amounts
+- **Category exclusions** – Exclude entire categories from review campaigns
+- **Advanced template customization** – Design compelling, branded email templates with professional design options
+- **Dynamic mail tags** – Build personalized emails using multiple variables without touching code
+- **Reliable CRON scheduling** – Background monitoring runs independently of site traffic
+- **Comprehensive email logs** – Track all review request activity with detailed delivery records
+
+## Frequently Asked Questions
+
+### How soon after purchase should I send review requests?
+
+The optimal timing is typically 7-14 days after delivery, allowing customers time to experience the product. You can customize this delay in the plugin settings to match your product type and customer journey.
+
+### Can I send multiple reminder emails?
+
+Yes. Configure multiple follow-up emails with custom timing intervals (e.g., 3 days, 7 days later) to non-respondents, dramatically increasing your review collection rate.
+
+### How do discount codes work?
+
+Discount codes are automatically generated and sent to customers only after their review has been approved by the store admin. This ensures only verified purchasers receive rewards and prevents spam or fake reviews.
+
+### Can customers abuse the discount code system?
+
+No. You can set a maximum limit for the number of rewards each user can receive per year, preventing abuse while still encouraging genuine feedback.
+
+### Can I exclude certain products from review requests?
+
+Currently, you can exclude entire categories from review campaigns. Individual product exclusions are not available in this version.
+
+### What's the difference between product-level and order-level requests?
+
+Product-level requests ask customers to review individual items (with the option to include all purchased products in one email). Order-level requests send a single streamlined message covering the entire order experience.
+
+### How does the minimum order filter work?
+
+Set a minimum purchase amount threshold to only request reviews from customers who exceed it. This ensures you target invested buyers most likely to leave detailed, valuable feedback.
+
+### Can I customize the email templates?
+
+Yes. The plugin provides advanced template customization with professional design options and dynamic mail tags (customer names, product details, order info) to create personalized, branded emails without coding.
+
+### What are mail tags?
+
+Mail tags are dynamic placeholders like {customer_name}, {product_name}, and {order_number} that automatically populate with real customer data, allowing you to create personalized emails easily.
+
+### Will review requests be sent even during low-traffic periods?
+
+Yes. The plugin uses WordPress CRON scheduling to monitor and send emails independently of site traffic, ensuring consistent delivery on schedule.
+
+### Can I track which emails were sent?
+
+Absolutely. Comprehensive email logs provide detailed delivery records, response status, and complete transparency for measuring campaign effectiveness.
+
+### Does it work with variable products?
+
+Yes. The plugin fully supports both simple and variable WooCommerce products, including different sizes, colors, and variations.
+
+### What email services does it support?
+
+It works with any WordPress email setup including WordPress default mail and SMTP plugins (WP Mail SMTP, Easy WP SMTP, etc.).
+
+### Will it slow down my site?
+
+No. The plugin is lightweight and optimized for performance. Email sending is handled in the background using scheduled tasks.
+
+### Is there a limit to review requests?
+
+No limits on review requests. However, you can set limits on how many discount rewards each customer can receive per year to manage costs and prevent abuse.
+
+### How do I prevent spamming customers?
+
+The plugin includes smart filters: minimum order amounts, category exclusions, and configurable timing delays ensure customers only receive relevant requests at appropriate intervals.
+
+### How do I get support?
+
+Visit our support page or contact us directly. We typically respond within 24 hours on business days.
 
 ## Installation
 
-1. Upload the plugin folder to `/wp-content/plugins/`
-2. Activate the plugin from the WordPress dashboard
-3. Rest is automated!
+### Minimum Requirements
 
----
+* PHP 7.4 or greater is required (PHP 8.0 or greater is recommended)
+* MySQL 5.5.5 or greater, OR MariaDB version 10.1 or greater, is required
+* WordPress 6.6 or greater
+* WooCommerce 8.0 or greater is required
 
-## Cron Info
+### Automatic installation
 
-- Uses **`wp_schedule_single_event()`** to send follow-ups per subscriber
-- Make sure your WP-Cron is running correctly (or set a real cron job for reliability)
+Automatic installation is the easiest option — WordPress will handle the file transfer, and you won't need to leave your web browser. To do an automatic install of Review Follow-Up for WooCommerce, log in to your WordPress dashboard, navigate to the Plugins menu, and click "Add New."
 
----
+In the search field type "Review Follow-Up for WooCommerce," then click "Search Plugins." Once you've found the plugin, you can view details and install it by clicking "Install Now," and WordPress will take it from there.
 
-## Support
+### Manual installation
 
-This plugin is developer-focused. For issues or contributions, feel free to open an issue or pull request.
+Manual installation requires downloading the plugin and uploading it to your web server via your favorite FTP application. The WordPress codex contains [instructions on how to do this here](https://wordpress.org/support/article/managing-plugins/#manual-plugin-installation).
 
----
+### Updating
 
-## License
+Automatic updates should work smoothly, but we still recommend you back up your site.
 
-GPLv2 or later
-
----
-
-## Author
-
-Made with care by [Store Boost Kit](https://github.com/codedbymasood)
-Follow me on [Twitter](https://x.com/masoodmohamed90)
-Connect me on [Linkedin](https://www.linkedin.com/in/masoodmohamed/)
+If you encounter issues after an update, flush the permalinks by going to WordPress > Settings > Permalinks and hitting "Save." That should return things to normal.
