@@ -172,7 +172,7 @@ The {site_name} Team';
 			'stobokit-revifoup-email-templates', // menu slug.
 			esc_html__( 'Email Templates', 'plugin-slug' ),
 			esc_html__( 'Email Templates', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'',
 			0,
 			$fields

@@ -302,7 +302,7 @@ The {site_name} Team",
 		add_menu_page(
 			esc_html__( 'Review Requests', 'plugin-slug' ),
 			esc_html__( 'Review Requests', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-revifoup-review-requests',
 			array( $this, 'render_review_request_page' ),
 			'dashicons-email',

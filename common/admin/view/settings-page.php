@@ -131,7 +131,7 @@ add_action(
 			'stobokit-revifoup-review-requests-settings', // menu slug.
 			esc_html__( 'Settings', 'plugin-slug' ),
 			esc_html__( 'Settings', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'dashicon-email',
 			0,
 			$fields

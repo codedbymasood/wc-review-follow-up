@@ -126,7 +126,7 @@ register_activation_hook( __FILE__, array( 'REVIFOUP\Install', 'init' ) );
  * @return void
  */
 function revifoup_dev_admin_bar( $wp_admin_bar ) {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'manage_woocommerce' ) ) {
 		return;
 	}
 

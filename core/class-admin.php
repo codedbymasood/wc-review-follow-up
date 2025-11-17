@@ -253,7 +253,7 @@ class Admin {
 		add_menu_page(
 			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
 			esc_html__( 'Store Boost Kit', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' ),
 			$icon,
@@ -264,7 +264,7 @@ class Admin {
 			'stobokit-dashboard',
 			esc_html__( 'Dashboard', 'plugin-slug' ),
 			esc_html__( 'Dashboard', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-dashboard',
 			array( $this, 'dashboard' )
 		);
@@ -273,7 +273,7 @@ class Admin {
 			'stobokit-dashboard',
 			esc_html__( 'Status', 'plugin-slug' ),
 			esc_html__( 'Status', 'plugin-slug' ),
-			'manage_options',
+			'manage_woocommerce',
 			'stobokit-status',
 			array( $this, 'status' )
 		);
@@ -285,7 +285,7 @@ class Admin {
 				'stobokit-dashboard',
 				esc_html__( 'License', 'plugin-slug' ),
 				esc_html__( 'License', 'plugin-slug' ),
-				'manage_options',
+				'manage_woocommerce',
 				'stobokit-license',
 				array( $this, 'license' )
 			);
