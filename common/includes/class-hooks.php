@@ -116,13 +116,6 @@ class Hooks {
 				return isset( $args['coupon_expires_date'] ) ? $args['coupon_expires_date'] : '';
 			}
 		);
-
-		revifoup()->emailer->register_shortcode(
-			'coupon_expires',
-			function ( $args ) {
-				return isset( $args['coupon_expires_in'] ) ? $args['coupon_expires_in'] : '';
-			}
-		);
 	}
 
 	/**
@@ -229,7 +222,7 @@ The {site_name} Team',
 	}
 
 	public function get_subscribe_details( $comment = null ) {
-		$email      = 'masood@example.com'; // $comment->comment_author_email;
+		$email      = $comment->comment_author_email;
 		$product_id = (int) $comment->comment_post_ID;
 
 		global $wpdb;
@@ -254,7 +247,6 @@ The {site_name} Team',
 			$order = wc_get_order( $order_id );
 
 			foreach ( $order->get_items() as $item ) {
-
 				if ( $product_id === $item->get_product_id() ) {
 					return $row;
 				}
@@ -263,7 +255,6 @@ The {site_name} Team',
 	}
 
 	public function is_approved_review( $new_status = '', $comment = null ) {
-		return true;
 		if ( 'approved' === $new_status && in_array( $comment->comment_type, array( 'review', 'comment', '' ), true ) ) {
 			$is_product = 'product' === get_post_type( $comment->comment_post_ID );
 			if ( $is_product ) {
@@ -275,7 +266,6 @@ The {site_name} Team',
 	}
 
 	public function is_verified_purchase( $comment = null ) {
-		return true;
 		if ( $comment && $comment->comment_ID ) {
 			return (bool) get_comment_meta( $comment->comment_ID, 'verified', true );
 		}
@@ -284,7 +274,6 @@ The {site_name} Team',
 	}
 
 	public function is_within_reward_limit( $comment = null ) {
-		return true;
 		if ( $comment->user_id ) {
 
 			$allowed_coupon_limit = get_option( 'revifoup_allowed_coupon_limit', 3 );

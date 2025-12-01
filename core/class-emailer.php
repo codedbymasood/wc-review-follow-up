@@ -236,10 +236,6 @@ class Emailer {
 		$table_name = $wpdb->prefix . 'stobokit_email_queue';
 		$base_time  = time();
 
-		error_log( $send_time );
-
-		error_log( Utils::is_timestamp( $send_time ) );
-
 		if ( ! Utils::is_timestamp( $send_time ) ) {
 			$send_time = $base_time + ( $send_time * DAY_IN_SECONDS );
 		}
